@@ -99,5 +99,12 @@ body {
     color: #888;
 }
 
+#todoapp .content #user-info {
+    padding: 5px 10px;
+    border-top: 1px solid #ededed;
+    margin-bottom: 0px;
+    text-align: right;
+}
+
 
 

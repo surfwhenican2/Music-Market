@@ -107,7 +107,7 @@ $(function() {
 	var AppView = Parse.View.extend({
     	// Instead of generating a new element, bind to the existing skeleton of
     	// the App already present in the HTML.
-    	el: $("#main"),
+    	el: $("#mainapp"),
 
     	initialize: function() {
       		this.render();
@@ -117,10 +117,10 @@ $(function() {
     		if (Parse.User.current()) {
     			console.log("Parse User Logged In");
     	    new ManageAppView();
-      		} else {
+      	} else {
         	new LogInView();
         	console.log("Login In View Loaded");
-      		}
+      	}
     	}
   	});
 
