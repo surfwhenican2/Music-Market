@@ -6,7 +6,7 @@
   <meta name="description" content="CS 147 App">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css" media="all" type="text/css" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
   <script src="js/underscore-1.1.6.js"></script>
@@ -15,28 +15,22 @@
 
 <body>
   
-  <div id="main">
+  <div id="mainapp">
     <p>This is the main div</p>
     <h1>Heading</h1>
     
 
     <div class="content">
-      <h3> This is the Content Div </h3>
-    </div>
-
-    <div style="display:none" class="error">
-      Looks like there was a problem saving the test object. Make sure you've set your application ID and javascript key correctly in the call to <code>Parse.initialize</code> in this file.
-    </div>
-
-    <div style="display:none" class="success">
-      <p>We've also just created your first object using the following code:</p>
       
     </div>
-  </div>
+
+
 
   <div id="menu">
     Powered by <a href="https://www.parse.com">Parse</a> using the <a href="https://www.parse.com/docs/js_guide">JavaScript SDK</a> 
   </div>
+
+</div>
 
   <script type="text/template" id="login-template">
     <header id="header"></header>
@@ -67,6 +61,9 @@
       <div class="section">
 
         <h3>Logged in View Loaded: This is the Section class</h3>
+
+        <div id="main">
+        </div>
 
       </div>
   </script>
