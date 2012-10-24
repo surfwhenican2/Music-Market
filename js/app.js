@@ -14,27 +14,35 @@ $(function() {
 
   	var ManageAppView = Parse.View.extend({
 
+      el: ".content",
+
   		events: {
   			"click .log-out": "logOut"
   		},
 
-  		el: ".content",
-
   		initialize: function() {
   			var self = this;
+        
   			_.bindAll(this, 'render', 'logOut');
         this.$el.html(_.template($("#logged-in-view").html()));
+        this.render();
   		},
 
-  		logout: function(e) {
-  			Parse.User.logout();
+  		logOut: function(e) {
+  			Parse.User.logOut();
+        console.log("User Logged Out");
   			new LogInView();
   			this.undelegateEvents();
+
   			delete this;
   		},
 
   		render: function() {
 
+        //var template = _.template( $("#logged-in-view").html(), {} );
+            // Load the compiled HTML into the Backbone "el"
+        //this.$el.html( template );
+        this.delegateEvents();
   		}
   	});
 

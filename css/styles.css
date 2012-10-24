@@ -9,11 +9,24 @@ body {
     font-smoothing: antialiased;
 }
 
+/*#mainapp {
+    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
+    margin: 130px 0 40px 0;
+    border: 1px solid #ccc;
+    position: relative;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2),
+    0 25px 50px 0 rgba(0, 0, 0, 0.15);
+}*/
+
 #main {
     width: 500px;
     margin: auto;
     text-align: left;
-    background: white;
+    /*background: white;
+    */
     padding: 50px 60px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
@@ -49,18 +62,18 @@ body {
     line-height: 13px;
 }
 
-#todoapp .content .login {
+#mainapp .content .login {
     width: 350px;
     margin: 45px auto 25px auto;
 }
 
-#todoapp .content .login h2 {
+#mainapp .content .login h2 {
     font-weight: normal;
     font-size: 25px;
     margin-bottom: 20px;
 }
 
-#todoapp .content .login input {
+#mainapp .content .login input {
     display: block;
     margin-bottom: 10px;
     font-size: 20px;
@@ -68,11 +81,11 @@ body {
     width: 340px;;
 }
 
-#todoapp .content .login .signup-form {
+#mainapp .content .login .signup-form {
     margin-top: 25px;
 }
 
-#todoapp .content .login button {
+#mainapp .content .login button {
     padding: 5px 10px;
     background: #eee;
     font-size: 20px;
@@ -82,7 +95,7 @@ body {
     font-family: "Helvetica Neue";
 }
 
-#todoapp .content .login .error {
+#mainapp .content .login .error {
     border: 1px solid red;
     background: #FDEFF0;
     padding: 5px 15px;
@@ -99,12 +112,33 @@ body {
     color: #888;
 }
 
-#todoapp .content #user-info {
+#mainapp .content #user-info {
     padding: 5px 10px;
     border-top: 1px solid #ededed;
     margin-bottom: 0px;
     text-align: right;
 }
 
+button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 100%;
+    vertical-align: baseline;
+    font-family: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    #toggle-all,
+    #todo-list li .toggle {
+    background: none;
+    }
+}
 
 
