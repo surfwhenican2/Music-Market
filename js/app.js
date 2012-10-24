@@ -17,7 +17,9 @@ $(function() {
       el: ".content",
 
   		events: {
-  			"click .log-out": "logOut"
+  			"click .log-out": "logOut",
+        "click #page-one": "pageOne",
+        "click #page-two": "pageTwo"
   		},
 
   		initialize: function() {
@@ -43,9 +45,94 @@ $(function() {
             // Load the compiled HTML into the Backbone "el"
         //this.$el.html( template );
         this.delegateEvents();
-  		}
+  		},
+
+      pageOne: function(){
+        new PageOneView();
+        console.log("Loaded Page One View");
+      },
+
+      pageTwo: function(){
+        new PageTwoView();
+        console.log("Loaded Page Two View");
+      }
+
   	});
 
+    var PageOneView = Parse.View.extend({
+      
+      
+      events: {
+        "click .log-out": "logOut",
+        //"click #page-one": "pageOne",
+        "click #page-two": "pageTwo"
+      },
+
+      el: ".content",
+
+      initialize: function() {
+        var self = this;
+        _.bindAll(this, 'render', 'logOut', 'pageTwo');
+        this.$el.html(_.template($("#page-one-view").html()));
+        this.render();
+      },
+
+      render: function() {
+        this.delegateEvents();
+      },
+
+      logOut: function(e) {
+        Parse.User.logOut();
+        console.log("User Logged Out");
+        new LogInView();
+        this.undelegateEvents();
+        delete this;
+      },
+
+      pageTwo: function(){
+        new PageTwoView();
+        console.log("Loaded Page Two View");
+      }
+
+    });
+
+    var PageTwoView = Parse.View.extend({
+      
+      events: {
+        "click .log-out": "logOut",
+        "click #page-one": "pageOne",
+        //"click #page-two": "pageTwo"
+      },
+
+      el: ".content",
+
+      initialize: function() {
+        var self = this;
+        
+        _.bindAll(this, 'render', 'logOut', 'pageOne');
+        this.$el.html(_.template($("#page-two-view").html()));
+        this.render();
+      },
+
+      render: function() {
+        this.delegateEvents();
+      },
+
+      logOut: function(e) {
+        Parse.User.logOut();
+        console.log("User Logged Out");
+        new LogInView();
+        this.undelegateEvents();
+        delete this;
+      },
+
+      pageOne: function(){
+        new PageOneView();
+        console.log("Loaded Page One View");
+      },
+
+
+    });
 
   	var LogInView = Parse.View.extend({
     events: {
