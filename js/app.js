@@ -61,14 +61,13 @@ $(function() {
 
     var PageOneView = Parse.View.extend({
       
-      
       events: {
         "click .log-out": "logOut",
         //"click #page-one": "pageOne",
         "click #page-two": "pageTwo"
       },
 
-      el: ".content",
+      el: ".main",
 
       initialize: function() {
         var self = this;
@@ -104,7 +103,7 @@ $(function() {
         //"click #page-two": "pageTwo"
       },
 
-      el: ".content",
+      el: ".main",
 
       initialize: function() {
         var self = this;
@@ -155,6 +154,7 @@ $(function() {
       Parse.User.logIn(username, password, {
         success: function(user) {
           new ManageAppView();
+          location.reload();
           self.undelegateEvents();
           delete self;
         },
@@ -178,6 +178,7 @@ $(function() {
       Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
         success: function(user) {
           new ManageAppView();
+          location.reload();
           self.undelegateEvents();
           delete self;
         },

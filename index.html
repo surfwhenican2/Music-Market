@@ -56,20 +56,20 @@
   </script>
   
   <script type="text/template" id="logged-in-view">
+   
+      <div id="user-info">
+        Signed in as <%= Parse.User.current().get("username") %> (<a href="#" class="log-out">Log out</a>)
+      </div>
       <div data-role="navbar">
         <ul>
           <li><a href="#" id="page-one">Page One</a></li>
           <li><a href="#" id="page-two">Page Two</a></li>
         </ul>
-      </div><!-- /navbar -->    
-      <div id="user-info">
-        Signed in as <%= Parse.User.current().get("username") %> (<a href="#" class="log-out">Log out</a>)
-      </div>
+      </div><!-- /navbar -->   
 
       <div class="section">
-        <h3>Logged in View Loaded</h3>
 
-        <div id="main">
+        <div class="main">
         <h4> Main Div </h4>
         </div>
 
@@ -77,20 +77,11 @@
   </script>
 
     <script type="text/template" id="page-one-view">
-      <div data-role="navbar">
-        <ul>
-          <li><a href="#" id="page-one">Page One</a></li>
-          <li><a href="#" id="page-two">Page Two</a></li>
-        </ul>
-      </div><!-- /navbar -->    
-      <div id="user-info">
-        Signed in as <%= Parse.User.current().get("username") %> (<a href="#" class="log-out">Log out</a>)
-      </div>
-
+ 
       <div class="section">
         <h3>Page One View</h3>
 
-        <div id="main">
+        <div class="main">
         <h4> Main Div </h4>
         </div>
 
@@ -98,20 +89,11 @@
   </script>
 
     <script type="text/template" id="page-two-view">
-      <div data-role="navbar">
-        <ul>
-          <li><a href="#" id="page-one">Page One</a></li>
-          <li><a href="#" id="page-two">Page Two</a></li>
-        </ul>
-      </div><!-- /navbar -->    
-      <div id="user-info">
-        Signed in as <%= Parse.User.current().get("username") %> (<a href="#" class="log-out">Log out</a>)
-      </div>
 
       <div class="section">
         <h3>Page Two View</h3>
 
-        <div id="main">
+        <div class="main">
         <h4> Main Div </h4>
         </div>
 
