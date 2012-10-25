@@ -63,15 +63,16 @@ $(function() {
       
       events: {
         "click .log-out": "logOut",
-        //"click #page-one": "pageOne",
-        "click #page-two": "pageTwo"
+        "click #page-two": "pageTwo",
+        "click #page-three": "pageThree",
+        "click #page-four": "pageFour"
       },
 
       el: ".main",
 
       initialize: function() {
         var self = this;
-        _.bindAll(this, 'render', 'logOut', 'pageTwo');
+        _.bindAll(this, 'render', 'logOut', 'pageTwo', 'pageThree', 'pageFour');
         this.$el.html(_.template($("#page-one-view").html()));
         this.render();
       },
@@ -91,6 +92,16 @@ $(function() {
       pageTwo: function(){
         new PageTwoView();
         console.log("Loaded Page Two View");
+      },
+
+      pageThree: function(){
+        new PageThreeView();
+        console.log("Loaded Page Two View");
+      },
+
+      pageFour: function(){
+        new PageFourView();
+        console.log("Loaded Page Two View");
       }
 
     });
@@ -100,7 +111,8 @@ $(function() {
       events: {
         "click .log-out": "logOut",
         "click #page-one": "pageOne",
-        //"click #page-two": "pageTwo"
+        "click #page-three": "pageThree",
+        "click #page-four": "pageFour"
       },
 
       el: ".main",
@@ -130,6 +142,111 @@ $(function() {
         console.log("Loaded Page One View");
       },
 
+      pageThree: function(){
+        new PageThreeView();
+        console.log("Loaded Page Two View");
+      },
+
+      pageFour: function(){
+        new PageFourView();
+        console.log("Loaded Page Two View");
+      }
+
+    });
+
+    var PageThreeView = Parse.View.extend({
+      
+      events: {
+        "click .log-out": "logOut",
+        "click #page-one": "pageOne",
+        "click #page-two": "pageTwo",
+        "click #page-four": "pageFour"
+      },
+
+      el: ".main",
+
+      initialize: function() {
+        var self = this;
+        
+        _.bindAll(this, 'render', 'logOut', 'pageOne', 'pageTwo', 'pageFour');
+        this.$el.html(_.template($("#page-three-view").html()));
+        this.render();
+      },
+
+      render: function() {
+        this.delegateEvents();
+      },
+
+      logOut: function(e) {
+        Parse.User.logOut();
+        console.log("User Logged Out");
+        new LogInView();
+        this.undelegateEvents();
+        delete this;
+      },
+
+      pageOne: function(){
+        new PageOneView();
+        console.log("Loaded Page One View");
+      },
+
+      pageTwo: function(){
+        new PageTwoView();
+        console.log("Loaded Page Two View");
+      },
+
+      pageFour: function(){
+        new PageFourView();
+        console.log("Loaded Page Two View");
+      }
+
+    });
+
+    var PageFourView = Parse.View.extend({
+      
+      events: {
+        "click .log-out": "logOut",
+        "click #page-one": "pageOne",
+        "click #page-three": "pageThree",
+        "click #page-two": "pageTwo"
+      },
+
+      el: ".main",
+
+      initialize: function() {
+        var self = this;
+        
+        _.bindAll(this, 'render', 'logOut', 'pageOne', 'pageTwo', 'pageThree');
+        this.$el.html(_.template($("#page-four-view").html()));
+        this.render();
+      },
+
+      render: function() {
+        this.delegateEvents();
+      },
+
+      logOut: function(e) {
+        Parse.User.logOut();
+        console.log("User Logged Out");
+        new LogInView();
+        this.undelegateEvents();
+        delete this;
+      },
+
+      pageOne: function(){
+        new PageOneView();
+        console.log("Loaded Page One View");
+      },
+
+      pageTwo: function(){
+        new PageTwoView();
+        console.log("Loaded Page Two View");
+      },
+
+      pageThree: function(){
+        new PageThreeView();
+        console.log("Loaded Page Two View");
+      }
 
     });
 
