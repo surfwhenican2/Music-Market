@@ -17,17 +17,18 @@ $(function() {
       el: ".content",
 
   		events: {
-  			"click .log-out": "logOut",
-        "click #page-one": "pageOne",
-        "click #page-two": "pageTwo",
-        "click #page-three": "pageThree",
-        "click #page-four": "pageFour"
+  			"click .log-out":    "logOut",
+	        "click #page-one":   "pageOne",
+	        "click #page-two":   "pageTwo",
+	        "click #page-three": "pageThree",
+	        "click #page-four":  "pageFour",
+	        "click #page-five":  "pageFive"
   		},
 
   		initialize: function() {
   			var self = this;
         
-  			_.bindAll(this, 'render', 'logOut', 'pageOne','pageTwo', 'pageThree', 'pageFour');
+  			_.bindAll(this, 'render', 'logOut', 'pageOne','pageTwo', 'pageThree', 'pageFour', 'pageFive');
         this.$el.html(_.template($("#logged-in-view").html()));
         this.render();
   		},
@@ -63,6 +64,11 @@ $(function() {
       pageFour: function(){
         new PageFourView();
         console.log("Loaded Page Four View");
+      },
+      
+      pageFive: function() {
+	      new PageFiveView();
+	      console.log("Loaded Page Five View");
       }
 
   	});
@@ -152,6 +158,29 @@ $(function() {
       }
 
     });
+    
+    var PageFiveView = Parse.View.extend({
+      
+      events: {
+ 
+      },
+
+      el: ".main",
+
+      initialize: function() {
+        var self = this;
+        
+        _.bindAll(this, 'render');
+        this.$el.html(_.template($("#page-five-view").html()));
+        this.render();
+      },
+
+      render: function() {
+        this.delegateEvents();
+      }
+
+    });
+
 
   	var LogInView = Parse.View.extend({
     events: {

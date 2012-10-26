@@ -17,16 +17,24 @@
 <script src="http://jquerymobile.com/demos/1.2.0/js/jquery.mobile-1.2.0.js"></script>
 
 
+<style type="text/css"> 
+	    table { width:100%; }
+	    table caption { text-align:left;  }
+	    table thead th { text-align:left; border-bottom-width:1px; border-top-width:1px; }
+	    table th, td { text-align:left; padding:6px; vertical-align: text-bottom;} 
+	    tfoot tr td {text-align: center;}
+	    table.profiles td {text-align: center;}
+	  </style> 
+
 </head>
 
 <body>
   
   <div id="mainapp">
     <div class="title">
-        <h1>App Title</h1>
+        <h1>Music Market</h1>
     </div>
-    <h2>Heading</h1>
-    <div class="content" style="border:2px solid">
+    <div class="content" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     </div>
   </div>
   <div id="menu">
@@ -62,17 +70,18 @@
       </div>
       <div data-role="navbar">
         <ul>
-          <li><a href="#" id="page-one">Page One</a></li>
-          <li><a href="#" id="page-two">Page Two</a></li>
-          <li><a href="#" id="page-three">Page Three</a></li>
-          <li><a href="#" id="page-four">Page Four</a></li>
+          <li><a href="#" id="page-one">IPO</a></li>
+          <li><a href="#" id="page-two">All Songs</a></li>
+          <li><a href="#" id="page-three">My Portfolio</a></li>
+          <li><a href="#" id="page-four">Top Investors</a></li>
+          <li><a href="#" id="page-six">Settings</a></li>
         </ul>
       </div><!-- /navbar -->   
 
       <div class="section">
 
         <div class="main">
-        <h4> Main Div For Logged In View</h4>
+        <h4> Testing </h4>
         </div>
 
       </div>
@@ -80,35 +89,116 @@
 
   <script type="text/template" id="page-one-view">
  
-      <div class="section" style="border:2px solid">
-        <h3>Page One View</h3>
-
-        <div class="main" style="border:1px solid">
-        <h4> Main Div </h4>
-        </div>
+      <div class="section">
+        <div class="main">
+        	<h4>PSY: Listed at $5.34</h4>
+        
+	        <img src="images/play_button.png" alt="Play Gangnam Style" />
+	        
+	        <a href="index.html" data-role="button" data-icon="plus" id="buy_btn">Buy</a>
+	        
+	        <script type="text/javascript">
+	        	$('#buy_btn').button();
+	        </script>
+	    </div>
 
       </div>
   </script>
 
   <script type="text/template" id="page-two-view">
-
-      <div class="section" style="border:2px solid">
-        <h3>Page Two View</h3>
-
-        <div class="main" style="border:1px solid">
-        <h4> Main Div </h4>
+	  
+	  
+	  
+      <div class="section">
+        <div class="main">
+        	<table summary="This table lists all songs avaliable for sale.">
+			  <thead> 
+			    <tr> 
+			      <th scope="col"></th>  
+			      <th scope="col">Song</th>  
+			      <th scope="col">Current Price</th>  
+			      <th scope="col"></th>
+			    </tr> 
+			  </thead> 
+			  <tfoot> 
+			    <tr> 
+			      <td colspan="5">Search: <input type="text" name="search" id="id_search" /></td> 
+			    </tr> 
+			  </tfoot> 
+			  <tbody> 
+			  <tr> 
+			    <th scope="row">+</th> 
+			    <td>Gangnam Style</td> 
+			    <td>5.93</td> 
+			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro"></a></td>
+			  </tr> 
+			  <tr> 
+			    <th scope="row">-</th> 
+			    <td>Call Me Maybe</td> 
+			    <td>5.99</td> 
+			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro"></a></td>
+			  </tr> 
+			<tr> 
+			    <th scope="row">+</th> 
+			    <td>Sleeping Ute</td> 
+			    <td>4.55</td> 
+			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro"></a></td>
+			  </tr> 
+			  </tbody> 
+			</table> 
         </div>
 
       </div>
+      
+      <script type="text/javascript">
+      	$(".btn-bro").button();
+      </script>
   </script>
 
   <script type="text/template" id="page-three-view">
 
-      <div class="section" style="border:2px solid">
-        <h3>Page Three View</h3>
-
-        <div class="main" style="border:1px solid">
-        <h4> Main Div </h4>
+      <div class="section">
+        
+        <div class="main">
+        	<table summary="This table lists all the JetBlue flights.">
+			  <thead> 
+			    <tr> 
+			      <th scope="col"></th>  
+			      <th scope="col">Song</th>  
+			      <th scope="col">Current Price</th>  
+			      <th scope="col"># Shares</th>
+			      <th scope="col">Value</th>
+			    </tr>
+			  </thead> 
+			  <tfoot> 
+			    <tr> 
+			      <td colspan="5">Net Worth: $721.90</td> 
+			    </tr> 
+			  </tfoot> 
+			  <tbody> 
+			  <tr> 
+			    <th scope="row">+</th> 
+			    <td><a href="#" id="page-five">Gangnam Style</a></td> 
+			    <td>5.43</td> 
+			    <td>100</td>
+			    <td>593</td>
+			  </tr> 
+			  <tr> 
+			    <th scope="row">-</th> 
+			    <td>Personal Jesus</td> 
+			    <td>5.99</td> 
+			    <td>20</td>
+			    <td>119.80</td>
+			  </tr> 
+			<tr> 
+			    <th scope="row">+</th> 
+			    <td>Plug In Baby</td> 
+			    <td>4.55</td> 
+			    <td>2</td>
+			    <td>9.10</td>
+			  </tr> 
+			  </tbody> 
+			</table>
         </div>
 
       </div>
@@ -116,14 +206,92 @@
 
   <script type="text/template" id="page-four-view">
 
-      <div class="section" style="border:2px solid">
-        <h3>Page Four View</h3>
+      <div class="section">
 
-        <div class="main" style="border:1px solid">
-        <h4> Main Div </h4>
+        <div class="main">
+        		
+        		<table class="profiles">
+        			<tr>
+        				<td>
+	        				<img src="images/blank_profile.png" alt="Blank Profile" />
+        				</td>
+        				<td>
+        					<img src="images/blank_profile.png" alt="Blank Profile" />
+        				</td>
+        			</tr>
+        			<tr>
+        				<td>
+	        				<img src="images/blank_profile.png" alt="Blank Profile" />
+        				</td>
+        				<td>
+        					<img src="images/blank_profile.png" alt="Blank Profile" />
+        				</td>
+        			</tr>
+        		</table>
         </div>
 
       </div>
+  </script>
+  
+  <script type="text/template" id="page-five-view">
+  	  <div class="section">
+        <h3>Trading</h3>
+
+        <div class="main">
+       		
+       		<div data-role="popup" id="sharesbought">
+       			Congrats! You've bought X shares of Q.
+       			<p></p>
+       			New Net Worth = Y
+       		</div>
+       		
+       		<div data-role="popup" id="sharessold">
+       			Congrats! You've sold X shares of Q.
+       			<p></p>
+       			New Net Worth = Y
+       		</div>
+       		
+       	Gangnam Style
+       	<p>
+       	</p>
+	    <img src="images/Chart_placeholder.png" alt="Gangnam Graph" />
+
+	    <br /><br />
+	   	
+	   	<table>
+	   		<tr>
+	   			<td><img src="images/play_button.png" alt="Play Gangnam Style" /></td>
+	   			<td colspan="2">
+		   			GNGNM + 2%
+		   			<br />
+		   			Current Price: 5.43
+	   			</td>
+	   		</tr>
+	   		<tr>
+	   			<td style="text-align: right;">BUY</td>
+	   			<td><input type="text" placeholder="0.00" style="text-align: right;" /></td>
+	   			<td>
+		   			<a href="#sharesbought" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro">Go</a>
+	   			</td>
+	   		</tr>
+	   		<tr>
+	   			<td style="text-align: right;">SELL</td>
+	   			<td><input type="text" placeholder="0.00" style="text-align: right;" /></td>
+	   			<td>
+		   			<a href="#sharessold" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro">Go</a>
+	   			</td>
+	   		</tr>
+	   	</table>
+       	       		
+        </div>
+
+      </div>
+      
+      <script type="text/javascript">
+      	$(".btn-bro").button();
+      	$("#sharesbought").popup();
+      	$("#sharessold").popup();
+      </script>
   </script>
 
 </body>
