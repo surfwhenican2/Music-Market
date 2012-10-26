@@ -18,6 +18,7 @@
 
 
 <style type="text/css"> 
+		.section {padding: 0 10px;}
 	    table { width:100%; }
 	    table caption { text-align:left;  }
 	    table thead th { text-align:left; border-bottom-width:1px; border-top-width:1px; }
@@ -74,7 +75,7 @@
           <li><a href="#" id="page-two">All Songs</a></li>
           <li><a href="#" id="page-three">My Portfolio</a></li>
           <li><a href="#" id="page-four">Top Investors</a></li>
-          <li><a href="#" id="page-six">Settings</a></li>
+          <li><a href="#" id="page-settings">Settings</a></li>
         </ul>
       </div><!-- /navbar -->   
 
@@ -95,10 +96,10 @@
         
 	        <img src="images/play_button.png" alt="Play Gangnam Style" />
 	        
-	        <a href="index.html" data-role="button" data-icon="plus" id="buy_btn">Buy</a>
+	        <a href="#" data-role="button" data-icon="plus" id="page-five">Buy</a>
 	        
 	        <script type="text/javascript">
-	        	$('#buy_btn').button();
+	        	$('#page-five').button();
 	        </script>
 	    </div>
 
@@ -106,8 +107,6 @@
   </script>
 
   <script type="text/template" id="page-two-view">
-	  
-	  
 	  
       <div class="section">
         <div class="main">
@@ -130,7 +129,7 @@
 			    <th scope="row">+</th> 
 			    <td>Gangnam Style</td> 
 			    <td>5.93</td> 
-			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro"></a></td>
+			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="page-five"></a></td>
 			  </tr> 
 			  <tr> 
 			    <th scope="row">-</th> 
@@ -292,6 +291,19 @@
       	$("#sharesbought").popup();
       	$("#sharessold").popup();
       </script>
+  </script>
+  
+  <script type="text/template" id="page-settings-view">
+  	  <div class="section">
+  	  
+        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Username</a>
+        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Password</a>
+        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Upload Profile Picture</a>
+  	  </div>
+  	  
+  	  <script type="text/javascript">
+  	  	$(".btn-bro").button();
+  	  </script>
   </script>
 
 </body>
