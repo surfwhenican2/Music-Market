@@ -166,7 +166,7 @@ $(function() {
     });
     
     var PageFiveView = Parse.View.extend({
-      
+
       events: {
  
       },
@@ -182,6 +182,20 @@ $(function() {
       },
 
       render: function() {
+        var usdtoeur = ["0","1","2"];
+
+        var chart1 = new Highcharts.StockChart({
+          chart: {
+            renderTo: 'container'
+          },
+          rangeSelector: {
+            selected: 1
+          },
+          series: [{
+            name: 'USD to EUR',
+            data: usdtoeur // predefined JavaScript array
+          }]
+        });
         this.delegateEvents();
       }
 
@@ -273,6 +287,20 @@ $(function() {
 
     render: function() {
       this.$el.html(_.template($("#login-template").html()));
+      
+      Parse.FacebookUtils.logIn(null, {
+       success: function(user) {
+        if (!user.existed()) {
+          alert("User signed up and logged in through Facebook!");
+          } else {
+          alert("User logged in through Facebook!");
+          }
+       },
+       error: function(user, error) {
+        alert("User cancelled the Facebook login or did not fully authorize.");
+       }
+      });
+
       this.delegateEvents();
     }
   });
