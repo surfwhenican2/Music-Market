@@ -288,18 +288,18 @@ $(function() {
     render: function() {
       this.$el.html(_.template($("#login-template").html()));
       
-      Parse.FacebookUtils.logIn(null, {
-       success: function(user) {
-        if (!user.existed()) {
-          alert("User signed up and logged in through Facebook!");
-          } else {
-          alert("User logged in through Facebook!");
-          }
-       },
-       error: function(user, error) {
-        alert("User cancelled the Facebook login or did not fully authorize.");
-       }
-      });
+      // Parse.FacebookUtils.logIn(null, {
+      //  success: function(user) {
+      //   if (!user.existed()) {
+      //     alert("User signed up and logged in through Facebook!");
+      //     } else {
+      //     alert("User logged in through Facebook!");
+      //     }
+      //  },
+      //  error: function(user, error) {
+      //   alert("User cancelled the Facebook login or did not fully authorize.");
+      //  }
+      // });
 
       this.delegateEvents();
     }
