@@ -157,7 +157,11 @@
 	  
       <div class="section">
         <div class="main">
-        	<table summary="This table lists all songs avaliable for sale.">
+                <div class="list">
+          <p> List is loading dynamically </p>
+          <ul data-role="listview" id="song-list" data-filter="true">
+        </div>
+  <!--      	<table summary="This table lists all songs avaliable for sale.">
 			  <thead> 
 			    <tr> 
 			      <th scope="col"></th>  
@@ -191,7 +195,7 @@
 			    <td><a href="" data-role="button" data-iconpos="notext" iconshadow="true" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro"></a></td>
 			  </tr> 
 			  </tbody> 
-			</table> 
+			</table> -->
         </div>
 
       </div>
@@ -351,6 +355,17 @@
   	  <script type="text/javascript">
   	  	$(".btn-bro").button();
   	  </script>
+  </script>
+
+  <script type="text/template" id="song-listing-template">
+    <li class="<%= done ? 'completed' : '' %>">
+    <div class="view">
+
+    // <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %>>
+      <label class="song-title"><%= SongName %></label>
+      <label class="song-price"><%= CurrentPrice %></label>
+    </div>
+    </li>
   </script>
 
 </body>

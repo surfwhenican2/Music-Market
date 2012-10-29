@@ -110,14 +110,67 @@ $(function() {
       initialize: function() {
         var self = this;
         
-        _.bindAll(this, 'render');
+        _.bindAll(this, 'render', 'addOne', 'addAll');
         this.$el.html(_.template($("#page-two-view").html()));
+
+        this.songs = new SongList;
+        var Songs = Parse.Object.extend("Songs");
+        var query = new Parse.Query(Songs);
+        this.songs = query.collection();
+
+        this.songs.fetch({
+  success: function(collection) {
+     var liststr;
+    collection.each(function(object) {
+      //console.warn(object);
+      var title = object.get("SongName");
+      console.log(title)
+      var price = object.get("CurrentPrice");
+       liststr += '<li>';
+       liststr += title;
+       liststr += '<span>       $';
+       liststr += price;
+       liststr += '</span>';
+       liststr += '</li>';
+    });
+     liststr += "</ul>";
+     $('.list').append(liststr);
+     
+
+  },
+  error: function(collection, error) {
+    console.log(error);
+  }
+});
+
+        this.addAll();
         this.render();
       },
 
       render: function() {
         this.delegateEvents();
+        this.addAll();
+        this.refresh();
+
+
+        console.log("Add all and render were called");
+      },
+
+      addOne: function(song){
+        var view = new SongView({model: song});
+        this.$("song-list").append(view.render().el);
+      },
+
+      addAll: function(){
+        this.$("song-list").html("");
+        this.songs.each(this.addOne);
+
+      },
+
+      refresh: function(){
+        $('.list').listview('refresh');
       }
+
 
     });
 
@@ -220,7 +273,6 @@ $(function() {
       render: function() {
         this.delegateEvents();
       }
-//Hi
     });
 
 
@@ -287,19 +339,7 @@ $(function() {
 
     render: function() {
       this.$el.html(_.template($("#login-template").html()));
-      
-      // Parse.FacebookUtils.logIn(null, {
-      //  success: function(user) {
-      //   if (!user.existed()) {
-      //     alert("User signed up and logged in through Facebook!");
-      //     } else {
-      //     alert("User logged in through Facebook!");
-      //     }
-      //  },
-      //  error: function(user, error) {
-      //   alert("User cancelled the Facebook login or did not fully authorize.");
-      //  }
-      // });
+
 
       this.delegateEvents();
     }
@@ -324,6 +364,56 @@ $(function() {
       	}
     	}
   	});
+
+  var Song = Parse.Object.extend("Song", {
+
+    defaults: {
+      SongName: "NULL",
+      CurrentPrice: "NULL"
+    },
+
+    initialize: function(){
+      if (!this.get("SongName")) {
+        this.set({"SongName": this.defaults.SongName});
+      }
+      if (!this.get("CurrentPrice")) {
+        this.set({"CurrentPrice": this.defaults.CurrentPrice});
+      }
+    }
+
+
+  });
+
+  var SongList = Parse.Collection.extend({
+    
+    model: Song
+
+  });
+
+  var SongView = Parse.View.extend({
+    
+    tagname: "li",
+
+    events: {
+    },
+
+    initialize: function() {
+      var self = this;
+      _.bindAll(this, 'render');
+      this.$el.html(_.template($('#song-list-template').html()));
+      this.render();
+    },
+
+    render: function() {
+      var JSONString = this.model.toJSON();
+      console.log("JSON Representation for SongView");
+      console.log(JSONString);
+
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    }
+
+  });
 
  	var state = new AppState;
 
