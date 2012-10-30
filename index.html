@@ -154,14 +154,17 @@
   </script>
 
   <script type="text/template" id="page-two-view">
-	  
+	  <link rel="stylesheet" href="http://jquerymobile.com/demos/1.2.0/docs/_assets/css/jqm-docs.css"/>
       <div class="section">
         <div class="main">
-                <div class="list">
-          <p> List is loading dynamically </p>
-          <ul data-role="listview" id="song-list" data-filter="true">
-        </div>
-  <!--      	<table summary="This table lists all songs avaliable for sale.">
+          <div class="list">
+            <p> </p>
+            <p> List is loading dynamically </p>
+            <ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >
+          </div>
+  <!--      	
+
+  <table summary="This table lists all songs avaliable for sale.">
 			  <thead> 
 			    <tr> 
 			      <th scope="col"></th>  
@@ -202,7 +205,11 @@
       
       <script type="text/javascript">
       	$(".btn-bro").button();
+        function refresh(){
+          $('.list').listview('refresh');
+      }
       </script>
+
   </script>
 
   <script type="text/template" id="page-three-view">
@@ -358,7 +365,7 @@
   </script>
 
   <script type="text/template" id="song-listing-template">
-    <li class="<%= done ? 'completed' : '' %>">
+    <li class="done">
     <div class="view">
 
     // <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %>>

@@ -110,10 +110,12 @@ $(function() {
       initialize: function() {
         var self = this;
         
-        _.bindAll(this, 'render', 'addOne', 'addAll');
+        _.bindAll(this, 'render', 'addOne', 'addAll', 'render');
         this.$el.html(_.template($("#page-two-view").html()));
 
-        this.songs = new SongList;
+ 
+
+       this.songs = new SongList;
         var Songs = Parse.Object.extend("Songs");
         var query = new Parse.Query(Songs);
         this.songs = query.collection();
@@ -135,13 +137,11 @@ $(function() {
     });
      liststr += "</ul>";
      $('.list').append(liststr);
-     
-
   },
   error: function(collection, error) {
     console.log(error);
   }
-});
+}); 
 
         this.addAll();
         this.render();
@@ -149,11 +149,7 @@ $(function() {
 
       render: function() {
         this.delegateEvents();
-        this.addAll();
         this.refresh();
-
-
-        console.log("Add all and render were called");
       },
 
       addOne: function(song){
@@ -168,7 +164,9 @@ $(function() {
       },
 
       refresh: function(){
+        $('.list').listview();
         $('.list').listview('refresh');
+        console.log("Refresh was called");
       }
 
 
@@ -276,7 +274,8 @@ $(function() {
     });
 
 
-  	var LogInView = Parse.View.extend({
+  var LogInView = Parse.View.extend({
+
     events: {
       "submit form.login-form": "logIn",
       "submit form.signup-form": "signUp"
@@ -394,13 +393,16 @@ $(function() {
     
     tagname: "li",
 
+    //template: _.template($('#song-item-template').html()),
+
     events: {
+      //"click .li" : "viewDetail"
     },
 
     initialize: function() {
       var self = this;
-      _.bindAll(this, 'render');
-      this.$el.html(_.template($('#song-list-template').html()));
+      _.bindAll(this, 'render', 'viewDetail');
+      this.$el.html(_.template($('#song-item-template').html()));
       this.render();
     },
 
@@ -411,6 +413,10 @@ $(function() {
 
       $(this.el).html(this.template(this.model.toJSON()));
       return this;
+    },
+
+    viewDetail: function() {
+      window.alert("Click List Item");
     }
 
   });
