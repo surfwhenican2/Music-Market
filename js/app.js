@@ -338,6 +338,21 @@ $(function() {
       
       Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
         success: function(user) {
+          var Portfolio = Parse.Object.extend("Portfolio");
+          var portfolio = new Portfolio();
+          portfolio.set("NetWorth", 1000);
+          portfolio.set("user", user);
+          portfolio.save(null, {
+            success: function(portfolio){
+              var query = new Parse.Query(Portfolio);
+              query.equalTo("user", user);
+              query.find({
+                success: function(usersPortfolio){
+                  console.log(usersPortfolio.get("NetWorth"));
+                }
+              });
+            }
+          });
           new ManageAppView();
           location.reload();
           self.undelegateEvents();
