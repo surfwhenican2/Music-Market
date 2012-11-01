@@ -121,27 +121,27 @@ $(function() {
         this.songs = query.collection();
 
         this.songs.fetch({
-  success: function(collection) {
-     var liststr;
-    collection.each(function(object) {
-      //console.warn(object);
-      var title = object.get("SongName");
-      console.log(title)
-      var price = object.get("CurrentPrice");
-       liststr += '<li>';
-       liststr += title;
-       liststr += '<span>       $';
-       liststr += price;
-       liststr += '</span>';
-       liststr += '</li>';
-    });
-     liststr += "</ul>";
-     $('.list').append(liststr);
-  },
-  error: function(collection, error) {
-    console.log(error);
-  }
-}); 
+          success: function(collection) {
+             var liststr = '<ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >'
+            collection.each(function(object) {
+              //console.warn(object);
+              var title = object.get("SongName");
+              console.log(title)
+              var price = object.get("CurrentPrice");
+               liststr += '<li>';
+               liststr += title;
+               liststr += '<span>       $';
+               liststr += price;
+               liststr += '</span>';
+               liststr += '</li>';
+            });
+             liststr += "</ul>";
+             $('.list').append(liststr);
+          },
+          error: function(collection, error) {
+            console.log(error);
+          }
+        }); 
 
         this.addAll();
         this.render();
@@ -207,6 +207,25 @@ $(function() {
         
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-four-view").html()));
+        
+        /*
+        var TopInvestors = Parse.Object.extend("TopInvestor");
+        var topinvestors = new Parse.Query(TopInvestors);
+        topinvestors.limit(4);
+        query.exists("NetWorth");
+        query.descending("NetWorth");
+        topinvestors.find({
+          success: function(results) {
+            alert("Successfully retrieved " + results.length + " scores.");
+              console.warn(results);
+            });
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+
+*/
         this.render();
       },
 
@@ -379,9 +398,8 @@ $(function() {
         this.set({"CurrentPrice": this.defaults.CurrentPrice});
       }
     }
-
-
   });
+
 
   var SongList = Parse.Collection.extend({
     
