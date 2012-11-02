@@ -141,7 +141,13 @@
         <div class="main">
         	<h4>PSY: Listed at $5.34</h4>
         
-	        <img src="images/play_button.png" alt="Play Gangnam Style" />
+	        <audio id="gangnam" preload>
+        <source src="audio/Gangnam_Style.mp3" type="audio/mp3" />
+ </audio>
+        
+<button onclick="document.getElementById('gangnam').play()">
+        <img src= "images/play_button.png" />
+</button>
 	        
 	        <a href="#" data-role="button" data-icon="plus" id="page-five">Buy</a>
 	        
@@ -212,7 +218,7 @@
 
   </script>
 
-  <script type="text/template" id="page-three-view">
+  <script type="text/template" id="portfolio-view">
 
       <div class="section">
         
@@ -229,7 +235,11 @@
 			  </thead> 
 			  <tfoot> 
 			    <tr> 
-			      <td colspan="5">Net Worth: $721.90</td> 
+			      <td colspan="5">
+            <div class="net-worth-div">
+            
+            </div 
+            </td> 
 			    </tr> 
 			  </tfoot> 
 			  <tbody> 
@@ -265,27 +275,10 @@
 
       <div class="section">
 
-        <div class="main">
-        		
-        		<table class="profiles">
-        			<tr>
-        				<td>
-	        				<img src="images/blank_profile.png" alt="Blank Profile" />
-        				</td>
-        				<td>
-        					<img src="images/blank_profile.png" alt="Blank Profile" />
-        				</td>
-        			</tr>
-        			<tr>
-        				<td>
-	        				<img src="images/blank_profile.png" alt="Blank Profile" />
-        				</td>
-        				<td>
-        					<img src="images/blank_profile.png" alt="Blank Profile" />
-        				</td>
-        			</tr>
-        		</table>
+        <div class="main2">
+
         </div>
+      </div>
 
   </script>
   

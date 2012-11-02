@@ -58,8 +58,8 @@ $(function() {
       },
 
       pageThree: function(){
-        new PageThreeView();
-        console.log("Loaded Page Three View");
+        new PortfolioView();
+        console.log("Loaded Portfolio View");
       },
 
       pageFour: function(){
@@ -172,7 +172,7 @@ $(function() {
 
     });
 
-    var PageThreeView = Parse.View.extend({
+    var PortfolioView = Parse.View.extend({
       
       events: {
 
@@ -184,7 +184,31 @@ $(function() {
         var self = this;
         
         _.bindAll(this, 'render');
-        this.$el.html(_.template($("#page-three-view").html()));
+        this.$el.html(_.template($("#portfolio-view").html()));
+        
+        var user = Parse.User.current();
+        var userId = user.id;
+
+        var userInfo = Parse.Object.extend("User");
+        var query = new Parse.Query(userInfo);
+        query.get(userId, {
+          success: function(userInfo) {
+            var netWorth = userInfo.get("NetWorth");
+            netWorth = netWorth.toString();
+            console.log(netWorth);
+            var netWorthString = '<h3> Networth: ' + netWorth + '</h3>';
+            console.log(netWorthString);
+            
+            $('.net-worth-div').append(netWorthString);
+            
+          },
+          error: function(object, error) {
+            console.log(error);
+          }
+        });
+
+
+
         this.render();
       },
 
@@ -208,24 +232,40 @@ $(function() {
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-four-view").html()));
         
-        /*
-        var TopInvestors = Parse.Object.extend("TopInvestor");
-        var topinvestors = new Parse.Query(TopInvestors);
+        
+        var Portfolio = Parse.Object.extend("Portfolio");
+
+        var topinvestors = new Parse.Query(Portfolio);
+        
+        topinvestors.greaterThan("NetWorth", 0);
+        topinvestors.descending("NetWorth");
         topinvestors.limit(4);
-        query.exists("NetWorth");
-        query.descending("NetWorth");
         topinvestors.find({
           success: function(results) {
             alert("Successfully retrieved " + results.length + " scores.");
               console.warn(results);
-            });
+              var topInvestorString = '<table class="profiles"><tr>';
+              var len=results.length;
+              for(var i=0; i<len; i++) {
+                topInvestorString += '<td>'
+                var object = results[i];
+                var worth = object.get("NetWorth");
+                var numShares = object.get("NumberShares");
+                var soldPrice = object.get("SoldPrice");
+                topInvestorString += '<img src="images/blank_profile.png" alt="Blank Profile" />'
+                topInvestorString += '<p>Worth:' + worth + '</p><p>NumberOfShares:' + numShares + '</p><p>SoldPrice: ' + soldPrice + "</p>";
+                topInvestorString += '</td>';
+              }
+              console.log(topInvestorString);
+              $('.main2').append(topInvestorString);
+            
           },
           error: function(error) {
             alert("Error: " + error.code + " " + error.message);
           }
         });
 
-*/
+
         this.render();
       },
 
