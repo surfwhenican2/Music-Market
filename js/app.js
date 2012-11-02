@@ -128,7 +128,7 @@ $(function() {
               var title = object.get("SongName");
               console.log(title)
               var price = object.get("CurrentPrice");
-               liststr += '<li><a href="" class="btn-bro" id="page-five">';
+               liststr += '<li><a href="#" class="btn-bro" id="page-five">';
                liststr += title;
                liststr += '</a><span>       $';
                liststr += price;
@@ -242,19 +242,17 @@ $(function() {
         topinvestors.limit(4);
         topinvestors.find({
           success: function(results) {
-            //alert("Successfully retrieved " + results.length + " scores.");
-              console.warn(results);
               var topInvestorString = '<table class="profiles"><tr>';
               var len=results.length;
               for(var i=0; i<len; i++) {
-                topInvestorString += '<td>'
+                topInvestorString += '<tr>'
                 var object = results[i];
                 var worth = object.get("NetWorth");
                 var numShares = object.get("NumberShares");
                 var soldPrice = object.get("SoldPrice");
                 topInvestorString += '<img src="images/blank_profile.png" alt="Blank Profile" />'
                 topInvestorString += '<p>Worth:' + worth + '</p><p>Something Relevant:' + numShares + '</p><p>Rating: ' + soldPrice + "</p>";
-                topInvestorString += '</td>';
+                topInvestorString += '</tr>';
               }
               console.log(topInvestorString);
               $('.main2').append(topInvestorString);
