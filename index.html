@@ -141,19 +141,31 @@
         <div class="main">
         	<h4>PSY: Listed at $5.34</h4>
         
-	        <audio id="gangnam" preload>
-        <source src="audio/Gangnam_Style.mp3" type="audio/mp3" />
- </audio>
+          <audio id="gangnam" preload="preload">
+            <source src="audio/Gangnam_Style.mp3" type="audio/mp3" />
+          </audio>
         
-<button onclick="document.getElementById('gangnam').play()">
-        <img src= "images/play_button.png" />
-</button>
-	        
-	        <a href="#" data-role="button" data-icon="plus" id="page-five">Buy</a>
+          <button onclick="playMusica(); $(this).hide(); $('#stop_song').show();" id="play_song">
+            <img src= "images/play_button.png" />
+          </button>
+          
+          <button onclick="pauseMusica(); $(this).hide(); $('#play_song').show();" style="display:none;" id="stop_song">
+            <img src="images/play_button.png" />
+          </button>
+          
+          <a href="#" data-role="button" data-icon="plus" id="page-five">Buy</a>
 	        
 	        <script type="text/javascript">
-	        	$('#page-five').button();
-	        </script>
+            $('#page-five').button();
+            
+            var playMusica = function() {
+              document.getElementById('gangnam').play();//('#gangnam').play();
+              console.log($('#gangnam'));
+            }
+            var pauseMusica = function() {            
+              document.getElementById('gangnam').pause()
+            }
+          </script>
 	    </div>
 
       </div>
@@ -168,7 +180,9 @@
             <p> List is loading dynamically </p>
             
           </div>
-  <!--      	
+  <!--  <script type="text/javascript">
+        $(".btn-bro").button();	
+        </script>
 
   <table summary="This table lists all songs avaliable for sale.">
 			  <thead> 
@@ -345,15 +359,27 @@
   
   <script type="text/template" id="page-settings-view">
   	  <div class="section">
+  	  <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Password</a>
+        <a href="#upload_prof_pic" data-rel="popup" data-icon="arrow-r" class="btn-bro">Upload Profile Picture</a>
+        
+        <div data-role="popup" id="upload_prof_pic">
+          
+          
+          <form action="post" enctype="multipart/form-data" style="padding:10px;">
+            <p>
+              Select a photo to upload!
+            </p>
+            <input type="file" />
+            <input type="submit" value="Upload Photo" class="btn-bro" />
+          </form>
+        </div>
+        
+      </div>
   	  
-        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Username</a>
-        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Password</a>
-        <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Upload Profile Picture</a>
-  	  </div>
-  	  
-  	  <script type="text/javascript">
-  	  	$(".btn-bro").button();
-  	  </script>
+  	   <script type="text/javascript">
+        $(".btn-bro").button();
+        $("#upload_prof_pic").popup({ overlayTheme: "b" });
+      </script>
   </script>
 
   <script type="text/template" id="song-item-template">

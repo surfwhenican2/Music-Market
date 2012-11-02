@@ -253,7 +253,7 @@ $(function() {
                 var numShares = object.get("NumberShares");
                 var soldPrice = object.get("SoldPrice");
                 topInvestorString += '<img src="images/blank_profile.png" alt="Blank Profile" />'
-                topInvestorString += '<p>Worth:' + worth + '</p><p>NumberOfShares:' + numShares + '</p><p>SoldPrice: ' + soldPrice + "</p>";
+                topInvestorString += '<p>Worth:' + worth + '</p><p>Something Relevant:' + numShares + '</p><p>Rating: ' + soldPrice + "</p>";
                 topInvestorString += '</td>';
               }
               console.log(topInvestorString);
