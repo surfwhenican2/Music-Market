@@ -13,9 +13,7 @@ $(function() {
   	});
 
   	var ManageAppView = Parse.View.extend({
-
       el: ".content",
-
   		events: {
   			"click .log-out":    "logOut",
 	        "click #page-one":   "pageOne",
@@ -25,15 +23,12 @@ $(function() {
 	        "click #page-five":  "pageFive",
 	        "click #page-settings": "pageSettings"
   		},
-
   		initialize: function() {
   			var self = this;
-        
   			_.bindAll(this, 'render', 'logOut', 'pageOne','pageTwo', 'pageThree', 'pageFour', 'pageFive', 'pageSettings');
         this.$el.html(_.template($("#logged-in-view").html()));
         this.render();
   		},
-
   		logOut: function(e) {
   			Parse.User.logOut();
         console.log("User Logged Out");
@@ -41,40 +36,32 @@ $(function() {
   			this.undelegateEvents();
   			delete this;
   		},
-
   		render: function() {
         this.delegateEvents();
   		},
-
       pageOne: function(){
         new PageOneView();
         console.log("Loaded Page One View");
       },
-
       pageTwo: function(){
         new AllSongsView();
       },
-
       pageThree: function(){
         new PortfolioView();
         console.log("Loaded Portfolio View");
       },
-
       pageFour: function(){
         new TopInvestorsView();
         console.log("Loaded Top Investors View");
       },
-      
       pageFive: function() {
 	      new SongTradingView();
 	      console.log("Loaded Song Trading View");
       },
-      
       pageSettings: function() {
 	      new PageSettingsView();
 	      console.log("Loaded Page Settings View");
       }
-
   	});
 
     var PageOneView = Parse.View.extend({
@@ -100,13 +87,11 @@ $(function() {
         var songName = ($('#song-name').text());
         new SongTradingView({song:songName})
       }
-
     });
 
     var AllSongsView = Parse.View.extend({
       
-      events: {
-       
+      events: {  
       },
 
       el: ".main",
@@ -199,12 +184,8 @@ $(function() {
           success: function(userInfo) {
             var netWorth = userInfo.get("NetWorth");
             netWorth = netWorth.toString();
-            console.log(netWorth);
             var netWorthString = '<h3> Networth: ' + netWorth + '</h3>';
-            console.log(netWorthString);
-            
             $('.net-worth-div').append(netWorthString);
-            
           },
           error: function(object, error) {
             console.log(error);
@@ -212,6 +193,7 @@ $(function() {
         });
         this.render();
       },
+
       render: function() {
         this.delegateEvents();
       }
@@ -282,7 +264,8 @@ $(function() {
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-four-view").html()));
         
-        var topinvestors = new Parse.Query(Parse.User);
+        var User = Parse.User.extend();
+        var topinvestors = new Parse.Query(User);
         topinvestors.limit(4);
         topinvestors.descending("NetWorth");
         topinvestors.find({
@@ -333,7 +316,6 @@ $(function() {
         var songName = "";
         var currentPrice = 0;
         var artistName = "";
-
         console.log("Song ID is" + songId);
 
         var Songs = Parse.Object.extend("Songs");
@@ -451,7 +433,7 @@ $(function() {
                     }
                   });
                 } else {
-                  alert("You must purchase 1 or more shares");
+                  alert("You must purchase 1 or more shares.");
                 }
             } else if (songName = holding.get("songName")){
               var shares = parseInt(holding.get("numberShares"));
@@ -468,8 +450,26 @@ $(function() {
               holding.save(null, {
                 success: function(){
                   console.log("Save Succeeded");
-                  songId="";
-                  location.reload();
+                    var userInfo = Parse.Object.extend("User");
+                    var query = new Parse.Query(userInfo);
+                    query.get(userId, {
+                      success: function(userInfo) {
+                        var netWorth = parseFloat(userInfo.get("NetWorth"));
+                        netWorth -= totalCost;
+                        userInfo.set("NetWorth", netWorth);
+                        console.log('User: ' + userId + ' New Networth: ' + netWorth);
+                        userInfo.save(null, {
+                          success:function(userInfo) {
+                            console.log("Successfully Updated Networth");
+                            location.reload();
+                          }
+                        });
+                      },
+                      error: function(object, error) {
+                        console.log('Error Updating NetWorth: ' + error.code + " " + error.message);
+                      }
+                    });
+                  
                 },
                 error:function(error){
                   console.log('Save Failed :' + error );
@@ -482,55 +482,97 @@ $(function() {
           error: function(error){
             console.log(error);
           }
-
         });
       },
 
       sellShares: function(){
-        console.log("Clicked Shares Sold");
-        var numShares = document.getElementById('input-sell').value;
-        var songName = this.options.song;
-
+        var numShares = parseFloat(document.getElementById('input-sell').value);
+        var songId = this.options.songId;
+        var songName = $('#song-title').html();
+        console.log('Song Id: ' + songId);
         var user = Parse.User.current();
-        var Position = Parse.Object.extend("position");
+        userId = user.id;
+        var price = $('#share-price').html();
+        price = parseFloat(price);
+
+        var Position = Parse.Object.extend("Position");
         var query = new Parse.Query(Position);
-        query.equalTo("songName", songName);
-        query.find({
+        query.equalTo("songId", songId);
+        query.first({
           success:function(object){
             console.warn(object);
-            var currentNumShares;
-            console.log('User currently owns ' + currentNumShares + ' shares.');
+            if (typeof object == "undefined"){
+              alert("You do not own any shares.");
+            } else {
+              var currentNumShares = parseFloat(object.get("numberShares"));
+              var songName = object.get("songName");
+              var cost = parseFloat(object.get("totalCost"));
+              console.log('User currently owns ' + currentNumShares + ' shares.');
+              if (currentNumShares >= numShares) {
+                var newNumShares = currentNumShares-numShares;
+                var cashReceived = numShares * price;
+                var profit = parseFloat(cashReceived - cost);
+                object.set("numberShares", newNumShares);
+                object.set("realizedProfit", profit);
+                object.save(null, {
+                  success: function(){
+                    console.log("Save Succeeded. Updating NetWorth....");
+                    var userInfo = Parse.Object.extend("User");
+                    var query = new Parse.Query(userInfo);
+                    query.get(userId, {
+                      success: function(userInfo) {
+                        var netWorth = parseFloat(userInfo.get("NetWorth"));
+                        netWorth += cashReceived;
+                        userInfo.set("NetWorth", netWorth);
+                        console.log('User: ' + userId + ' New Networth: ' + netWorth);
+                        userInfo.save(null, {
+                          success:function(userInfo) {
+                            console.log("Successfully Updated Networth");
+                            location.reload();
+                          }
+                        });
+                      },
+                      error: function(object, error) {
+                        console.log('Error Updating NetWorth: ' + error.code + " " + error.message);
+                      }
+                    });
+                  },
+                  error:function(error){
+                    console.log('Error Saving: ' + error.code + " " + error.message);
+                  }
+                });
+              } else {
+                alert("You can't sell more shares than you own. You may only sell " + currentNumShares + " shares of " + songName + ".");
+              }
+            }
           },
           error:function(error){
-            alert("Error: " + error.code + " " + error.message);
-
+            console.log("Big Time Error");
           }
         });
-
       }
-
     });
     
-    var PageSettingsView = Parse.View.extend({
+  var PageSettingsView = Parse.View.extend({
       
-      events: {
+    events: {
  
-      },
+    },
 
-      el: ".main",
+    el: ".main",
 
-      initialize: function() {
-        var self = this;
+    initialize: function() {
+      var self = this;
         
-        _.bindAll(this, 'render');
-        this.$el.html(_.template($("#page-settings-view").html()));
-        this.render();
-      },
+      _.bindAll(this, 'render');
+      this.$el.html(_.template($("#page-settings-view").html()));
+      this.render();
+    },
 
-      render: function() {
-        this.delegateEvents();
-      }
-    });
+    render: function() {
+      this.delegateEvents();
+    }
+  });
 
   var SignUpView = Parse.View.extend({
 
