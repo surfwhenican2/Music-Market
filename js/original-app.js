@@ -53,7 +53,7 @@ $(function() {
       },
 
       pageTwo: function(){
-        new PageTwoView();
+        new AllSongList();
         console.log("Loaded Page Two View");
       },
 
@@ -68,8 +68,8 @@ $(function() {
       },
       
       pageFive: function() {
-	      new SongTradingView();
-	      console.log("Loaded Sold Trading View");
+	      new PageFiveView();
+	      console.log("Loaded Page Five View");
       },
       
       pageSettings: function() {
@@ -82,25 +82,20 @@ $(function() {
     var PageOneView = Parse.View.extend({
       
       events: {
-        "click #stock-detail-page": "showDetail"
+
       },
 
       el: ".main",
 
       initialize: function() {
         var self = this;
-        _.bindAll(this, 'render', 'showDetail');
+        _.bindAll(this, 'render');
         this.$el.html(_.template($("#ipo-view").html()));
         this.render();
       },
 
       render: function() {
         this.delegateEvents();
-      },
-
-      showDetail: function() {
-        var songName = ($('#song-name').text());
-        new SongTradingView({song:songName})
       }
 
     });
@@ -108,7 +103,6 @@ $(function() {
     var PageTwoView = Parse.View.extend({
       
       events: {
-       
       },
 
       el: ".main",
@@ -130,22 +124,17 @@ $(function() {
             collection.each(function(object) {
               //console.warn(object);
               var title = object.get("SongName");
+              console.log(title)
               var price = object.get("CurrentPrice");
-               liststr += '<li>' + title;
-               liststr += '<input type="hidden" value="'+title+'"/><span>       $';
+               liststr += '<li><a href="#" class="btn-bro" id="page-five">';
+               liststr += title;
+               liststr += '</a><span>       $';
                liststr += price;
                liststr += '</span></li>';
             
             });
-            liststr += "</ul>";
-            console.log(liststr);
-            $('.list').append(liststr);
-            $('#song-list li').click(function(){
-                var songName = $(this).find('input').val();
-                console.log(songName);
-                new SongTradingView({song:songName});
-              });
-
+             liststr += "</ul>";
+             $('.list').append(liststr);
           },
           error: function(collection, error) {
             console.log(error);
@@ -177,12 +166,76 @@ $(function() {
         $('.list').listview('refresh');
         console.log("Refresh was called");
       }
-
-
     });
 
+    var AllSongList = Parse.View.extend({
 
+      el:$('#mainapp'),
+
+      events: {
+        "click li": 'showDetail',
+        'click button#add': 'addItem'
+      },
+      initialize:function(){
+      _.bindAll(this, 'render', 'addItem', 'appendItem', 'showDetail'); // remember: every function that uses 'this' as the current object should be in here
+      
+      this.collection = new SongList();
+      this.collection.bind('add', this.appendItem); // collection event binder
+
+      this.counter = 0;
+      this.render();  
+      },
+
+      appendItem: function(item){
+        $('ul', this.el).append("<li>"+item.get('part1')+" "+item.get('part2')+"</li>");
+      },
+
+      render: function(){
+      var self = this;      
+          $(this.el).append("<button id='add'>Add list item</button>");
+          $(this.el).append("<ul></ul>");
+          _(this.collection.models).each(function(item){ // in case collection is not empty
+            self.appendItem(item);
+          }, this);
+      },
+
+      showDetail: function(){
+        console.log("called show detail");
+      },
+
+    addItem: function(){
+      this.counter++;
+      var item = new Song();
+      item.set({
+        SongName: item.get('part2') + this.counter // modify item defaults
+      });
+      this.collection.add(item); // add item to collection; view is updated via event 'add'
+    },
+
+  });
     
+
+    var PortfolioView = Parse.View.extend({
+      
+      tageName:'ul',
+
+      initialize: function(){
+        this.model.bind("reset", this.render, this);
+        var self = this;
+        this.model.bind("add", function(holding){
+          $(self.el).append(new HoldingItemView({model:holding}).render().el);
+        });
+      },
+
+      render: function(){
+        _.each(this.models.models, function(holding){
+          $(this.el).append(new HoldingItemView({model:holding}).render().el);
+        }, this);
+        return this;
+      }
+
+    });
+<!--
     var PortfolioView = Parse.View.extend({
       
       events: {
@@ -199,6 +252,7 @@ $(function() {
         
         var user = Parse.User.current();
         var userId = user.id;
+
         var userInfo = Parse.Object.extend("User");
         var query = new Parse.Query(userInfo);
         query.get(userId, {
@@ -227,7 +281,7 @@ $(function() {
       }
 
     });
-
+-->
 
     var HoldingItemView = Parse.View.extend({
       
@@ -333,9 +387,7 @@ $(function() {
 
     });
     
-    var SongTradingView = Parse.View.extend({
-
-      
+    var PageFiveView = Parse.View.extend({
 
       events: {
         "click #buyButton":"buyShares",
@@ -344,163 +396,41 @@ $(function() {
 
       el: ".main",
 
-      initialize: function(options) {
+      initialize: function() {
         var self = this;
+        
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-five-view").html()));
-
-        var songName = options.song;
-        console.log("Song name is" + songName);
-        
-        $('#songtitle').append(songName);
-
-        this.render(songName);
+        this.render();
       },
 
-      render: function(songName) {
-        var prices = [0,1,2,3,4,5,6,7,8,9,8,7,6,5,4];
+      render: function() {
+        var usdtoeur = ["0","1","2"];
 
         var chart1 = new Highcharts.StockChart({
           chart: {
             renderTo: 'container'
           },
-          title:{
-            text: songName
-          },
-          xAxis:{
-            type: 'datetime'
-          },
-          yAxis:{
-            title: {
-              text: 'Credits'
-            }
-          },
           rangeSelector: {
             selected: 1
           },
           series: [{
-            name: songName,
-            data: prices // predefined JavaScript array
+            name: 'USD to EUR',
+            data: usdtoeur // predefined JavaScript array
           }]
         });
         this.delegateEvents();
       },
 
       buyShares: function(){
-
-        var songName = this.options.song;
-        console.log('SongName: '+songName);
-        var price = $('#share-price').html();
-        price = parseFloat(price);
+        console.log("Clicked Shares Bought");
         var numShares = document.getElementById('input-buy').value;
-        numShares = parseInt(numShares);
-        var totalCost = price * numShares;
-        totalCost = parseFloat(totalCost);
-        var user = Parse.User.current();
-        var userId = user.id;
-
-        var Position = Parse.Object.extend("Position");
-        var query = new Parse.Query(Position);
-        query.equalTo("user", user);
-        query.equalTo("songName", songName);
-        query.first({
-          success: function(holding){
-            console.warn(holding);
-            if (typeof holding == "undefined"){
-              console.log("User doesn't have holding in this item");
-                if (numShares > 0) {
-                  console.log('Song Name: ' + songName + ' Price: ' + price + ' Shares: ' + numShares + ' Total Cost: '+totalCost);
-                  var Position = Parse.Object.extend("Position");
-                  var openPosition = new Position();
-                  openPosition.set("songName", songName);
-                  openPosition.set("numberShares", numShares);
-                  openPosition.set("sharePrice", price);
-                  openPosition.set("totalCost", totalCost);
-                  openPosition.set("user", user);
-                  openPosition.save(null, {
-                    success: function(again){
-                      console.log("Save Successful");
-                    },
-                    error: function(error){
-                      console.log('Error Saving: ' + error);
-                    }
-                  });
-
-                  var userInfo = Parse.Object.extend("User");
-                  var query = new Parse.Query(userInfo);
-                  query.get(userId, {
-                    success: function(userInfo) {
-                      var netWorth = userInfo.get("NetWorth");
-                      netWorth -= totalCost;
-                      userInfo.set("NetWorth", netWorth);
-                      console.log('User: ' + userId + ' New Networth: ' + netWorth);
-                      userInfo.save(null, {
-                        success:function(userInfo) {
-                          console.log("Updated Net Worth");
-                        }
-                      });
-                    },
-                    error: function(object, error) {
-                      console.log(error);
-                    }
-                  });
-                } else {
-                  alert("You must purchase 1 or more shares");
-                }
-            } else if (songName = holding.get("songName")){
-              var shares = parseInt(holding.get("numberShares"));
-              var prevPrice = parseFloat(holding.get("sharePrice"));
-              var prevTotalCost = parseFloat(holding.get("totalCost"));
-              console.log('Song Before- Shares: '+shares+' Price: '+prevPrice+' Total Cost: '+prevTotalCost);
-              var totalShares = numShares + shares;
-              var newTotalCost = totalCost + prevTotalCost;
-              var updatedPrice = (newTotalCost/totalShares);
-              console.log('Song After-Total Shares: '+totalShares+' Total Cost: '+newTotalCost+' Updated Price: '+updatedPrice);
-              holding.set("numberShares", totalShares);
-              holding.set("totalCost", newTotalCost);
-              holding.set("sharePrice", updatedPrice);
-              holding.save(null, {
-                success: function(){
-                  console.log("Save Succeeded");
-                },
-                error:function(error){
-                  console.log('Save Failed :' + error );
-                }
-              });
-            } else {
-              console.log("Else called");
-            }
-          },
-          error: function(error){
-            console.log(error);
-          }
-        });
-
         
-
       },
 
       sellShares: function(){
         console.log("Clicked Shares Sold");
         var numShares = document.getElementById('input-sell').value;
-        var songName = this.options.song;
-
-        var user = Parse.User.current();
-        var Position = Parse.Object.extend("position");
-        var query = new Parse.Query(Position);
-        query.equalTo("songName", songName);
-        query.find({
-          success:function(object){
-            console.warn(object);
-            var currentNumShares;
-            console.log('User currently owns ' + currentNumShares + ' shares.');
-          },
-          error:function(error){
-            alert("Error: " + error.code + " " + error.message);
-
-          }
-        });
-
       }
 
     });
@@ -526,17 +456,43 @@ $(function() {
       }
     });
 
-  var SignUpView = Parse.View.extend({
+
+  var LogInView = Parse.View.extend({
 
     events: {
+      "submit form.login-form": "logIn",
       "submit form.signup-form": "signUp"
     },
 
-    el:".content",
-
+    el: ".content",
+    
     initialize: function() {
-      _.bindAll(this, "signUp");
+      _.bindAll(this, "logIn", "signUp");
       this.render();
+    },
+
+    logIn: function(e) {
+      var self = this;
+      var username = this.$("#login-username").val();
+      var password = this.$("#login-password").val();
+      
+      Parse.User.logIn(username, password, {
+        success: function(user) {
+          new ManageAppView();
+          location.reload();
+          self.undelegateEvents();
+          delete self;
+        },
+
+        error: function(user, error) {
+          self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
+          this.$(".login-form button").removeAttr("disabled");
+        }
+      });
+
+      this.$(".login-form button").attr("disabled", "disabled");
+
+      return false;
     },
 
     signUp: function(e) {
@@ -579,61 +535,16 @@ $(function() {
     },
 
     render: function() {
-      this.$el.html(_.template($("#signup-template").html()));
-      this.delegateEvents();
-    }
-
-   });
-
-  var LogInView = Parse.View.extend({
-
-    events: {
-      "submit form.login-form": "logIn",
-      "click #signup-button": "signUp"
-    },
-
-    el: ".content",
-    
-    initialize: function() {
-      _.bindAll(this, "logIn", "signUp");
-      this.render();
-    },
-
-    logIn: function(e) {
-      var self = this;
-      var username = this.$("#login-username").val();
-      var password = this.$("#login-password").val();
-      Parse.User.logIn(username, password, {
-        success: function(user) {
-          new ManageAppView();
-          location.reload();
-          self.undelegateEvents();
-          delete self;
-        },
-        error: function(user, error) {
-          self.$(".login-form .error").html("Invalid username or password. Please try again.").show();
-          this.$(".login-form button").removeAttr("disabled");
-        }
-      });
-
-      this.$(".login-form button").attr("disabled", "disabled");
-
-      return false;
-    },
-
-    render: function() {
       this.$el.html(_.template($("#login-template").html()));
-      this.delegateEvents();
-    },
 
-    signUp: function() {
-      console.log("signup button pressed");
-      new SignUpView();
+
+      this.delegateEvents();
     }
   });
 
 	var AppView = Parse.View.extend({
-
+    	// Instead of generating a new element, bind to the existing skeleton of
+    	// the App already present in the HTML.
     	el: $("#mainapp"),
 
     	initialize: function() {

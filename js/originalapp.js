@@ -53,7 +53,7 @@ $(function() {
       },
 
       pageTwo: function(){
-        new PageTwoView();
+        new AllSongList();
         console.log("Loaded Page Two View");
       },
 
@@ -89,17 +89,17 @@ $(function() {
 
       initialize: function() {
         var self = this;
-        _.bindAll(this, 'render', 'showDetail');
+        _.bindAll(this, 'render');
         this.$el.html(_.template($("#ipo-view").html()));
         this.render();
       },
 
       render: function() {
         this.delegateEvents();
-      },
+      }
 
       showDetail: function() {
-        var songName = ($('#song-name').text());
+        var songName = document.getElementById('h4').value;
         new SongTradingView({song:songName})
       }
 
@@ -108,7 +108,6 @@ $(function() {
     var PageTwoView = Parse.View.extend({
       
       events: {
-       
       },
 
       el: ".main",
@@ -130,22 +129,17 @@ $(function() {
             collection.each(function(object) {
               //console.warn(object);
               var title = object.get("SongName");
+              console.log(title)
               var price = object.get("CurrentPrice");
-               liststr += '<li>' + title;
-               liststr += '<input type="hidden" value="'+title+'"/><span>       $';
+               liststr += '<li><a href="#" class="btn-bro" id="page-five">';
+               liststr += title;
+               liststr += '</a><span>       $';
                liststr += price;
                liststr += '</span></li>';
             
             });
-            liststr += "</ul>";
-            console.log(liststr);
-            $('.list').append(liststr);
-            $('#song-list li').click(function(){
-                var songName = $(this).find('input').val();
-                console.log(songName);
-                new SongTradingView({song:songName});
-              });
-
+             liststr += "</ul>";
+             $('.list').append(liststr);
           },
           error: function(collection, error) {
             console.log(error);
@@ -177,12 +171,11 @@ $(function() {
         $('.list').listview('refresh');
         console.log("Refresh was called");
       }
-
-
     });
 
 
     
+
     var PortfolioView = Parse.View.extend({
       
       events: {
@@ -335,8 +328,6 @@ $(function() {
     
     var SongTradingView = Parse.View.extend({
 
-      
-
       events: {
         "click #buyButton":"buyShares",
         "click #sellButton":"sellShares"
@@ -351,36 +342,23 @@ $(function() {
 
         var songName = options.song;
         console.log("Song name is" + songName);
-        
-        $('#songtitle').append(songName);
 
-        this.render(songName);
+        this.render();
       },
 
-      render: function(songName) {
-        var prices = [0,1,2,3,4,5,6,7,8,9,8,7,6,5,4];
+      render: function() {
+        var usdtoeur = ["0","1","2"];
 
         var chart1 = new Highcharts.StockChart({
           chart: {
             renderTo: 'container'
           },
-          title:{
-            text: songName
-          },
-          xAxis:{
-            type: 'datetime'
-          },
-          yAxis:{
-            title: {
-              text: 'Credits'
-            }
-          },
           rangeSelector: {
             selected: 1
           },
           series: [{
-            name: songName,
-            data: prices // predefined JavaScript array
+            name: 'USD to EUR',
+            data: usdtoeur // predefined JavaScript array
           }]
         });
         this.delegateEvents();
@@ -388,95 +366,39 @@ $(function() {
 
       buyShares: function(){
 
-        var songName = this.options.song;
-        console.log('SongName: '+songName);
-        var price = $('#share-price').html();
-        price = parseFloat(price);
-        var numShares = document.getElementById('input-buy').value;
-        numShares = parseInt(numShares);
-        var totalCost = price * numShares;
-        totalCost = parseFloat(totalCost);
+        console.log("Clicked Shares Bought");
         var user = Parse.User.current();
         var userId = user.id;
 
+        var songName = this.options.song;
+        var price = document.getElementById('share-price')
+        var numShares = document.getElementById('input-buy').value;
         var Position = Parse.Object.extend("Position");
-        var query = new Parse.Query(Position);
-        query.equalTo("user", user);
-        query.equalTo("songName", songName);
-        query.first({
-          success: function(holding){
-            console.warn(holding);
-            if (typeof holding == "undefined"){
-              console.log("User doesn't have holding in this item");
-                if (numShares > 0) {
-                  console.log('Song Name: ' + songName + ' Price: ' + price + ' Shares: ' + numShares + ' Total Cost: '+totalCost);
-                  var Position = Parse.Object.extend("Position");
-                  var openPosition = new Position();
-                  openPosition.set("songName", songName);
-                  openPosition.set("numberShares", numShares);
-                  openPosition.set("sharePrice", price);
-                  openPosition.set("totalCost", totalCost);
-                  openPosition.set("user", user);
-                  openPosition.save(null, {
-                    success: function(again){
-                      console.log("Save Successful");
-                    },
-                    error: function(error){
-                      console.log('Error Saving: ' + error);
-                    }
-                  });
+        var openPosition = new Position();
+        openPosition.set("songName", songName);
+        openPosition.set("numberShares", numShares);
+        openPosition.set("sharePrice", price);
+        var totalCost = price * numShares;
+        var relation = user.relation("position");
+        relation.add(openPosition);
+        user.save();
 
-                  var userInfo = Parse.Object.extend("User");
-                  var query = new Parse.Query(userInfo);
-                  query.get(userId, {
-                    success: function(userInfo) {
-                      var netWorth = userInfo.get("NetWorth");
-                      netWorth -= totalCost;
-                      userInfo.set("NetWorth", netWorth);
-                      console.log('User: ' + userId + ' New Networth: ' + netWorth);
-                      userInfo.save(null, {
-                        success:function(userInfo) {
-                          console.log("Updated Net Worth");
-                        }
-                      });
-                    },
-                    error: function(object, error) {
-                      console.log(error);
-                    }
-                  });
-                } else {
-                  alert("You must purchase 1 or more shares");
-                }
-            } else if (songName = holding.get("songName")){
-              var shares = parseInt(holding.get("numberShares"));
-              var prevPrice = parseFloat(holding.get("sharePrice"));
-              var prevTotalCost = parseFloat(holding.get("totalCost"));
-              console.log('Song Before- Shares: '+shares+' Price: '+prevPrice+' Total Cost: '+prevTotalCost);
-              var totalShares = numShares + shares;
-              var newTotalCost = totalCost + prevTotalCost;
-              var updatedPrice = (newTotalCost/totalShares);
-              console.log('Song After-Total Shares: '+totalShares+' Total Cost: '+newTotalCost+' Updated Price: '+updatedPrice);
-              holding.set("numberShares", totalShares);
-              holding.set("totalCost", newTotalCost);
-              holding.set("sharePrice", updatedPrice);
-              holding.save(null, {
-                success: function(){
-                  console.log("Save Succeeded");
-                },
-                error:function(error){
-                  console.log('Save Failed :' + error );
-                }
-              });
-            } else {
-              console.log("Else called");
-            }
+        var userInfo = Parse.Object.extend("User");
+        var query = new Parse.Query(userInfo);
+        query.get(userId, {
+          success: function(userInfo) {
+            var netWorth = userInfo.get("NetWorth");
+            netWorth -= totalCost;
+            userInfo.save(null, {
+              success:function(userInfo) {
+              userInfo.set("NetWorth", netWorth);
+              }
+            });
           },
-          error: function(error){
+          error: function(object, error) {
             console.log(error);
           }
         });
-
-        
 
       },
 
@@ -484,19 +406,17 @@ $(function() {
         console.log("Clicked Shares Sold");
         var numShares = document.getElementById('input-sell').value;
         var songName = this.options.song;
-
         var user = Parse.User.current();
-        var Position = Parse.Object.extend("position");
-        var query = new Parse.Query(Position);
+        var relation = user.relation("position");
+        var query = realation.query();
+
         query.equalTo("songName", songName);
         query.find({
-          success:function(object){
-            console.warn(object);
-            var currentNumShares;
-            console.log('User currently owns ' + currentNumShares + ' shares.');
-          },
+          success:function(list){
+            var currentNumShares  = list.get("numberShares");
+
+          }
           error:function(error){
-            alert("Error: " + error.code + " " + error.message);
 
           }
         });
@@ -531,8 +451,7 @@ $(function() {
     events: {
       "submit form.signup-form": "signUp"
     },
-
-    el:".content",
+    el:"content",
 
     initialize: function() {
       _.bindAll(this, "signUp");
@@ -579,7 +498,7 @@ $(function() {
     },
 
     render: function() {
-      this.$el.html(_.template($("#signup-template").html()));
+      this.$el.html(_.template($("#sign-up-template").html()));
       this.delegateEvents();
     }
 
@@ -589,7 +508,7 @@ $(function() {
 
     events: {
       "submit form.login-form": "logIn",
-      "click #signup-button": "signUp"
+      "click .signup-button": "signUp"
     },
 
     el: ".content",
