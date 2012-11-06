@@ -39,7 +39,6 @@ $(function() {
         console.log("User Logged Out");
   			new LogInView();
   			this.undelegateEvents();
-
   			delete this;
   		},
 
@@ -53,8 +52,7 @@ $(function() {
       },
 
       pageTwo: function(){
-        new PageTwoView();
-        console.log("Loaded Page Two View");
+        new AllSongsView();
       },
 
       pageThree: function(){
@@ -63,13 +61,13 @@ $(function() {
       },
 
       pageFour: function(){
-        new PageFourView();
-        console.log("Loaded Page Four View");
+        new TopInvestorsView();
+        console.log("Loaded Top Investors View");
       },
       
       pageFive: function() {
 	      new SongTradingView();
-	      console.log("Loaded Sold Trading View");
+	      console.log("Loaded Song Trading View");
       },
       
       pageSettings: function() {
@@ -105,7 +103,7 @@ $(function() {
 
     });
 
-    var PageTwoView = Parse.View.extend({
+    var AllSongsView = Parse.View.extend({
       
       events: {
        
@@ -126,24 +124,21 @@ $(function() {
 
         this.songs.fetch({
           success: function(collection) {
-             var liststr = '<ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >'
+             var liststr = '<ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >';
             collection.each(function(object) {
-              //console.warn(object);
               var title = object.get("SongName");
               var price = object.get("CurrentPrice");
+              var objectId = object.id;
                liststr += '<li>' + title;
-               liststr += '<input type="hidden" value="'+title+'"/><span>       $';
+               liststr += '<input type="hidden" value="'+objectId+'"/><span>       $';
                liststr += price;
                liststr += '</span></li>';
-            
             });
             liststr += "</ul>";
-            console.log(liststr);
             $('.list').append(liststr);
             $('#song-list li').click(function(){
-                var songName = $(this).find('input').val();
-                console.log(songName);
-                new SongTradingView({song:songName});
+                var objId = $(this).find('input').val();
+                new SongTradingView({songId:objId});
               });
 
           },
@@ -186,7 +181,6 @@ $(function() {
     var PortfolioView = Parse.View.extend({
       
       events: {
-
       },
 
       el: ".main",
@@ -216,12 +210,8 @@ $(function() {
             console.log(error);
           }
         });
-
-
-
         this.render();
       },
-
       render: function() {
         this.delegateEvents();
       }
@@ -257,7 +247,7 @@ $(function() {
 
     var StockDetailView = Parse.View.extend({
 
-      template: _.template($('#page-five-view').html()),
+      template: _.template($('#song-trading-view').html()),
 
       initialize:function(){
         this.model.bind("change", this.render, this);
@@ -278,7 +268,7 @@ $(function() {
 
     });
 
-    var PageFourView = Parse.View.extend({
+    var TopInvestorsView = Parse.View.extend({
       
       events: {
  
@@ -292,28 +282,22 @@ $(function() {
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-four-view").html()));
         
-        
-        var Portfolio = Parse.Object.extend("Portfolio");
-
-        var topinvestors = new Parse.Query(Portfolio);
-        
-        topinvestors.greaterThan("NetWorth", 0);
-        topinvestors.descending("NetWorth");
+        var topinvestors = new Parse.Query(Parse.User);
         topinvestors.limit(4);
+        topinvestors.descending("NetWorth");
         topinvestors.find({
           success: function(results) {
-              var topInvestorString = '<table class="profiles"><tr>';
+            console.warn(results);
+              var topInvestorString = '<table class="profiles">';
               var len=results.length;
               for(var i=0; i<len; i++) {
-                topInvestorString += '<tr>'
                 var object = results[i];
                 var worth = object.get("NetWorth");
-                var numShares = object.get("NumberShares");
-                var soldPrice = object.get("SoldPrice");
-                topInvestorString += '<img src="images/blank_profile.png" alt="Blank Profile" />'
-                topInvestorString += '<p>Worth:' + worth + '</p><p>Something Relevant:' + numShares + '</p><p>Rating: ' + soldPrice + "</p>";
-                topInvestorString += '</tr>';
+                var username = object.get("username");
+                topInvestorString += '<tr><img src="images/blank_profile.png" alt="Blank Profile" />'
+                topInvestorString += '<p>User: ' + username + '</p><p>Net Worth: ' + worth + '</p></tr>';
               }
+              topInvestorString += '</table>';
               console.log(topInvestorString);
               $('.main2').append(topInvestorString);
             
@@ -322,8 +306,6 @@ $(function() {
             alert("Error: " + error.code + " " + error.message);
           }
         });
-
-
         this.render();
       },
 
@@ -335,8 +317,6 @@ $(function() {
     
     var SongTradingView = Parse.View.extend({
 
-      
-
       events: {
         "click #buyButton":"buyShares",
         "click #sellButton":"sellShares"
@@ -347,14 +327,36 @@ $(function() {
       initialize: function(options) {
         var self = this;
         _.bindAll(this, 'render');
-        this.$el.html(_.template($("#page-five-view").html()));
+        this.$el.html(_.template($("#song-trading-view").html()));
 
-        var songName = options.song;
-        console.log("Song name is" + songName);
-        
-        $('#songtitle').append(songName);
+        var songId = options.songId;
+        var songName = "";
+        var currentPrice = 0;
+        var artistName = "";
 
+        console.log("Song ID is" + songId);
+
+        var Songs = Parse.Object.extend("Songs");
+        var query = new Parse.Query(Songs);
+        query.equalTo("objectId", songId);
+        query.first({
+          success: function(song){
+            console.warn(song);
+            artistName = song.get("ArtistName");
+            currentPrice = song.get("CurrentPrice");
+            songName = song.get("SongName");
+
+            console.log('Artist: '+artistName+' Song: '+songName+' Price: '+currentPrice);
+            $('#song-title').append(songName);
+            $('#share-price').append(currentPrice);
+            $('#artist-name').append(artistName);
+          },
+          error: function(error){
+            console.log('Error Loading Song Details: '+ error);
+          }
+        });
         this.render(songName);
+
       },
 
       render: function(songName) {
@@ -388,9 +390,10 @@ $(function() {
 
       buyShares: function(){
 
-        var songName = this.options.song;
-        console.log('SongName: '+songName);
+        var songId = this.options.songId;
+        console.log('SongId: '+ songId);
         var price = $('#share-price').html();
+        var songName = $('#song-title').html();
         price = parseFloat(price);
         var numShares = document.getElementById('input-buy').value;
         numShares = parseInt(numShares);
@@ -402,7 +405,7 @@ $(function() {
         var Position = Parse.Object.extend("Position");
         var query = new Parse.Query(Position);
         query.equalTo("user", user);
-        query.equalTo("songName", songName);
+        query.equalTo("songId", songId);
         query.first({
           success: function(holding){
             console.warn(holding);
@@ -417,6 +420,7 @@ $(function() {
                   openPosition.set("sharePrice", price);
                   openPosition.set("totalCost", totalCost);
                   openPosition.set("user", user);
+                  openPosition.set("songId", songId);
                   openPosition.save(null, {
                     success: function(again){
                       console.log("Save Successful");
@@ -436,7 +440,9 @@ $(function() {
                       console.log('User: ' + userId + ' New Networth: ' + netWorth);
                       userInfo.save(null, {
                         success:function(userInfo) {
-                          console.log("Updated Net Worth");
+                          console.log("Successfully Updated Net Worth");
+                          songId="";
+                          location.reload();
                         }
                       });
                     },
@@ -462,6 +468,8 @@ $(function() {
               holding.save(null, {
                 success: function(){
                   console.log("Save Succeeded");
+                  songId="";
+                  location.reload();
                 },
                 error:function(error){
                   console.log('Save Failed :' + error );
@@ -474,10 +482,8 @@ $(function() {
           error: function(error){
             console.log(error);
           }
+
         });
-
-        
-
       },
 
       sellShares: function(){
