@@ -309,7 +309,7 @@ $(function() {
 
       initialize: function(options) {
         var self = this;
-        _.bindAll(this, 'render');
+        _.bindAll(this, 'render', 'buyShares', 'sellShares');
         this.$el.html(_.template($("#song-trading-view").html()));
 
         var songId = options.songId;
@@ -469,7 +469,6 @@ $(function() {
                         console.log('Error Updating NetWorth: ' + error.code + " " + error.message);
                       }
                     });
-                  
                 },
                 error:function(error){
                   console.log('Save Failed :' + error );
@@ -529,6 +528,7 @@ $(function() {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
                             location.reload();
+                            delete self;
                           }
                         });
                       },
@@ -556,7 +556,7 @@ $(function() {
   var PageSettingsView = Parse.View.extend({
       
     events: {
- 
+        "click #change-password":"changePass"
     },
 
     el: ".main",
@@ -564,13 +564,18 @@ $(function() {
     initialize: function() {
       var self = this;
         
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'changePass');
       this.$el.html(_.template($("#page-settings-view").html()));
       this.render();
     },
 
     render: function() {
       this.delegateEvents();
+    },
+
+    changePass: function(){
+      console.log("Change Password Called");
+      new ChangePasswordView();
     }
   });
 
@@ -628,6 +633,49 @@ $(function() {
 
     render: function() {
       this.$el.html(_.template($("#signup-template").html()));
+      this.delegateEvents();
+    }
+
+   });
+
+  var ChangePasswordView = Parse.View.extend({
+
+    events: {
+      "submit form.change-password-form": "changePassword"
+    },
+
+    el:".main",
+
+    initialize: function() {
+      _.bindAll(this, "changePassword");
+      this.render();
+    },
+
+    changePassword: function(e) {
+      var self = this;
+      
+      var newPassword = this.$("#new-password").val();
+      
+      var user = Parse.User.current();
+      user.setPassword(newPassword);
+      user.save(null, {
+        success: function(user) {
+          console.log(user);
+          alert("Your password has been successfully changed. You may now log in with your new password.");
+          
+        },
+        error: function(error){
+          console.log(error);
+        }
+      });
+
+      this.$(".change-password-form button").attr("disabled", "disabled");
+      
+      return false;
+    },
+
+    render: function() {
+      this.$el.html(_.template($("#change-password-template").html()));
       this.delegateEvents();
     }
 

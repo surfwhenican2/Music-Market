@@ -319,7 +319,7 @@
   
   <script type="text/template" id="page-settings-view">
   	  <div class="section">
-  	  <a href="#" data-role="button" data-icon="arrow-r" class="btn-bro">Change Password</a>
+  	  <a href="#" data-role="button" id="change-password" data-icon="arrow-r" class="btn">Change Password</a>
         <a href="#upload_prof_pic" data-rel="popup" data-icon="arrow-r" class="btn-bro">Upload Profile Picture</a>
         
         <div data-role="popup" id="upload_prof_pic">
@@ -338,6 +338,7 @@
   	  
   	   <script type="text/javascript">
         $(".btn-bro").button();
+        $(".btn").button();
         $("#upload_prof_pic").popup({ overlayTheme: "b" });
       </script>
   </script>
@@ -359,6 +360,18 @@
         <label class="song-price"><%= CurrentPrice %></label>
       </div>
     </li>
+  </script>
+
+    <script type="text/template" id="change-password-template">
+    <div class="title">
+        <h1>Music Market</h1>
+    </div>
+        <form class="change-password-form">
+          <h3>Type in a new Password</h3>
+          <div class="error" style="display:none"></div>
+          <input type="password" id="new-password" placeholder="New Password" />
+          <button>Set new Password</button>
+        </form>
   </script>
 
 </body>
