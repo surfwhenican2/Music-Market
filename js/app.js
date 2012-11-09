@@ -205,6 +205,20 @@ $(function() {
           }
         });
 
+        var userInfo = Parse.Object.extend("User");
+        var query = new Parse.Query(userInfo);
+        query.get(userId, {
+          success: function(userInfo) {
+            var netWorth = userInfo.get("NetWorth");
+            netWorth = netWorth.toString();
+            var netWorthString = '<h3> Networth: ' + netWorth + '</h3>';
+            $('.net-worth-div').append(netWorthString);
+          },
+          error: function(object, error) {
+            console.log(error);
+          }
+        });
+
         this.render();
       },
 
@@ -214,56 +228,6 @@ $(function() {
       doSomething: function(){
           var objId = $(this).find('input').val();
           new SongTradingView( {song:objId} );
-      }
-
-    });
-
-
-    var HoldingItemView = Parse.View.extend({
-      
-      tagname:"li",
-
-      template: _.template($('#holding-item-view').html()),
-
-      events: {
-        'click': 'showDetail'
-      },
-
-      initialize: function(){
-          this.model.bind("change", this.render, this);
-      },
-
-      render: function(eventname) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-      },
-
-      showDetail: function(){
-        var stockDetail = new StockDetailView();
-        new StockDetailView({})
-      }
-
-    });
-
-    var StockDetailView = Parse.View.extend({
-
-      template: _.template($('#song-trading-view').html()),
-
-      initialize:function(){
-        this.model.bind("change", this.render, this);
-
-      },
-      render: function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-      },
-      events:{
-        "change input":"change"
-      },
-
-      change: function(event){
-        var target = event.target;
-        console.log('changing' + target.id + 'from:' + target.defaultValue + ' to: ' + target.value);
       }
 
     });
@@ -282,7 +246,7 @@ $(function() {
         _.bindAll(this, 'render');
         this.$el.html(_.template($("#page-four-view").html()));
         
-        var User = Parse.User.extend();
+        var User = Parse.User.extend("User");
         var topinvestors = new Parse.Query(User);
         topinvestors.limit(4);
         topinvestors.descending("NetWorth");
@@ -295,7 +259,7 @@ $(function() {
                 var object = results[i];
                 var worth = object.get("NetWorth");
                 var username = object.get("username");
-                topInvestorString += '<tr><img src="images/blank_profile.png" alt="Blank Profile" />'
+                topInvestorString += '<tr><img src="images/sean.jpg" alt="Sean OBrien" height="160" width="220"/>'
                 topInvestorString += '<p>User: ' + username + '</p><p>Net Worth: ' + worth + '</p></tr>';
               }
               topInvestorString += '</table>';
@@ -424,6 +388,8 @@ $(function() {
                   openPosition.save(null, {
                     success: function(again){
                       console.log("Save Successful");
+                      alert('Congratulations. You just opened a position in ' + songName + ' and now own ' + numShares + ' shares.');
+
                     },
                     error: function(error){
                       console.log('Error Saving: ' + error);
@@ -442,6 +408,7 @@ $(function() {
                         success:function(userInfo) {
                           console.log("Successfully Updated Net Worth");
                           songId="";
+                          delete self;
                           location.reload();
                         }
                       });
@@ -468,6 +435,7 @@ $(function() {
               holding.save(null, {
                 success: function(){
                   console.log("Save Succeeded");
+                  alert('Congratulations. You just increased your holding in '+ songName + ' ' + numShares + ' shares. You now own ' + totalShares + ' shares.');
                     var userInfo = Parse.Object.extend("User");
                     var query = new Parse.Query(userInfo);
                     query.get(userId, {
@@ -479,7 +447,9 @@ $(function() {
                         userInfo.save(null, {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
-                            //location.reload();
+                            songId="";
+                            delete self;
+                            location.reload();
                           }
                         });
                       },
@@ -519,7 +489,7 @@ $(function() {
           success:function(object){
             console.warn(object);
             if (typeof object == "undefined"){
-              alert("You do not own any shares.");
+              alert('You do not own any shares of ' + songName + '.');
             } else {
               var currentNumShares = parseFloat(object.get("numberShares"));
               var songName = object.get("songName");
@@ -545,8 +515,11 @@ $(function() {
                         userInfo.save(null, {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
-                            location.reload();
+                            alert('You just sold ' + numShares + ' shares of ' + songName + '. Your remaining number of shares is ' + newNumShares + '.');
+                            songId="";
                             delete self;
+                            location.reload();
+                            
                           }
                         });
                       },
