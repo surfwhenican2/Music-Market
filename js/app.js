@@ -76,6 +76,7 @@ $(function() {
         var self = this;
         _.bindAll(this, 'render', 'showDetail');
         this.$el.html(_.template($("#ipo-view").html()));
+
         this.render();
       },
 
@@ -300,6 +301,8 @@ $(function() {
             artistName = song.get("ArtistName");
             currentPrice = song.get("CurrentPrice");
             songName = song.get("SongName");
+            var audioURL = 'audio/' + songId + '.mp3';
+            $('#song_src').attr('src', audioURL);
 
             console.log('Artist: '+artistName+' Song: '+songName+' Price: '+currentPrice);
             $('#song-title').append(songName);
