@@ -134,7 +134,6 @@
 
 
           <div class="list">
-            <p> </p>
           </div>
         <script type="text/javascript">
           $(".btn-bro").button();	
@@ -149,67 +148,17 @@
   </script>
 
   <script type="text/template" id="portfolio-view">
-
-      <div class="section">
-        
-        <div class="main">
-        	<table summary="This table lists all the JetBlue flights.">
-			  <thead> 
-			    <tr> 
-			      <th scope="col"></th>  
-			      <th scope="col">Song</th>  
-			      <th scope="col">Current Price</th>  
-			      <th scope="col"># Shares</th>
-			      <th scope="col">Value</th>
-			    </tr>
-			  </thead> 
-			  <tfoot> 
-			    <tr> 
-			      <td colspan="5">
-            <div class="net-worth-div">
-            
-            </div 
-            </td> 
-			    </tr> 
-			  </tfoot> 
-			  <tbody> 
-			  <tr> 
-			    <th scope="row">+</th> 
-			    <td><a href="#" id="page-five">Gangnam Style</a></td> 
-			    <td>5.43</td> 
-			    <td>100</td>
-			    <td>593</td>
-			  </tr> 
-			  <tr> 
-			    <th scope="row">-</th> 
-			    <td>Personal Jesus</td> 
-			    <td>5.99</td> 
-			    <td>20</td>
-			    <td>119.80</td>
-			  </tr> 
-			<tr> 
-			    <th scope="row">+</th> 
-			    <td>Plug In Baby</td> 
-			    <td>4.55</td> 
-			    <td>2</td>
-			    <td>9.10</td>
-			  </tr> 
-			  </tbody> 
-			</table>
+      <div class="section"> 
+        <div class="portfolio">
         </div>
-
       </div>
   </script>
 
   <script type="text/template" id="page-four-view">
-
       <div class="section">
-
         <div class="main2">
-
         </div>
       </div>
-
   </script>
   
   <script type="text/template" id="song-trading-view">
@@ -228,41 +177,64 @@
        			<p></p>
        			New Net Worth = Y
        		</div>
-       	<h3 id="song-title"></h3>
-        <h4 id="artist-name">by </h4>
-        <br />
-	    <div id="container" style="width: 80%; height: 400px"></div>
 
-	    <br /><br />
+         	<h3 id="song-title"></h3>
+          <h4 id="artist-name">by </h4>
+          <br />
+  	      <div id="container" style="width: 100%; height: 400px"></div>
+
+	        <br /><br />
 	   	
-	   	<table>
-	   		<tr>
-	   			<td><img src="images/play_button.png" alt="Play Gangnam Style" /></td>
-	   			<td colspan="2">
-		   			Current Price:<p id="share-price"></p>
-	   			</td>
-	   		</tr>
-	   		<tr>
-	   			<td style="text-align: right;">BUY</td>
-	   			<td><input id="input-buy" type="text" placeholder="10" style="text-align: right;" /></td>
-	   			<td>
-		   			<a href="#sharesbought" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="buyButton">Go</a>
-	   			</td>
-	   		</tr>
-	   		<tr>
-	   			<td style="text-align: right;">SELL</td>
-	   			<td><input id="input-sell" type="text" placeholder="10" style="text-align: right;" /></td>
-	   			<td>
-		   			<a href="#sharessold" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="sellButton">Go</a>
-	   			</td>
-	   		</tr>
-	   	</table>
+          <audio id="gangnam" preload="preload">
+            <source src="" type="audio/mp3" />
+          </audio>
+        
+          <button onclick="playMusica(); $(this).hide(); $('#stop_song').show();" id="play_song">
+            <img src= "images/play_button.png" />
+          </button>
+          
+          <button onclick="pauseMusica(); $(this).hide(); $('#play_song').show();" style="display:none;" id="stop_song">
+            <img src="images/play_button.png" />
+          </button>
+          
+
+        	   	<table>
+        	   		<tr>
+        	   			
+        	   			<td>
+        		   			Current Price:<p id="share-price"></p>
+        	   			</td>
+        	   		</tr>
+        	   		<tr>
+        	   			<td style="text-align: right;">BUY</td>
+        	   			<td><input id="input-buy" type="number" placeholder="10" style="text-align: right;" /></td>
+        	   			<td>
+        		   			<a href="#sharesbought" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="buyButton">Go</a>
+        	   			</td>
+        	   		</tr>
+        	   		<tr>
+        	   			<td style="text-align: right;">SELL</td>
+        	   			<td><input id="input-sell" type="number" placeholder="10" style="text-align: right;" /></td>
+        	   			<td>
+        		   			<a href="#sharessold" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="sellButton">Go</a>
+        	   			</td>
+        	   		</tr>
+        	   	</table>
        	       		
         </div>
 
       </div>
       
       <script type="text/javascript">
+            $('#page-five').button();
+            
+            var playMusica = function() {
+              document.getElementById('gangnam').play();//('#gangnam').play();
+              console.log($('#gangnam'));
+            }
+            var pauseMusica = function() {            
+              document.getElementById('gangnam').pause();
+            }
       	$(".btn-bro").button();
       	$("#sharesbought").popup();
       	$("#sharessold").popup();
@@ -272,7 +244,7 @@
   <script type="text/template" id="page-settings-view">
   	  <div class="section">
   	  <a href="#" data-role="button" id="change-password" data-icon="arrow-r" class="btn">Change Password</a>
-        <a href="#upload_prof_pic" data-rel="popup" data-icon="arrow-r" class="btn-bro">Upload Profile Picture</a>
+        
         
         <div data-role="popup" id="upload_prof_pic">
           
@@ -305,9 +277,14 @@
     </li>
   </script>
 
+  <script type="text/template">
+        <a href="#upload_prof_pic" data-rel="popup" data-icon="arrow-r" class="btn-bro">
+  </script>
+
   <script type="text/template" id="holding-item-view">
     <li class="done">
       <div class="view">
+
         <label class="song-title"><%= SongName %></label>
         <label class="song-price"><%= CurrentPrice %></label>
       </div>

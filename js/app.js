@@ -109,6 +109,7 @@ $(function() {
 
         this.songs.fetch({
           success: function(collection) {
+            console.warn(collection);
              var liststr = '<ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >';
             collection.each(function(object) {
               var title = object.get("SongName");
@@ -120,6 +121,7 @@ $(function() {
                liststr += '</span></li>';
             });
             liststr += "</ul>";
+            console.log(liststr);
             $('.list').append(liststr);
             $('#song-list li').click(function(){
                 var objId = $(this).find('input').val();
@@ -135,30 +137,24 @@ $(function() {
         this.addAll();
         this.render();
       },
-
       render: function() {
         this.delegateEvents();
         this.refresh();
       },
-
       addOne: function(song){
         var view = new SongView({model: song});
         this.$("song-list").append(view.render().el);
       },
-
       addAll: function(){
         this.$("song-list").html("");
         this.songs.each(this.addOne);
 
       },
-
       refresh: function(){
         $('.list').listview();
         $('.list').listview('refresh');
         console.log("Refresh was called");
       }
-
-
     });
 
 
@@ -166,6 +162,7 @@ $(function() {
     var PortfolioView = Parse.View.extend({
       
       events: {
+        "click .portfolio li":"doSomething"
       },
 
       el: ".main",
@@ -178,24 +175,45 @@ $(function() {
         
         var user = Parse.User.current();
         var userId = user.id;
-        var userInfo = Parse.Object.extend("User");
-        var query = new Parse.Query(userInfo);
-        query.get(userId, {
-          success: function(userInfo) {
-            var netWorth = userInfo.get("NetWorth");
-            netWorth = netWorth.toString();
-            var netWorthString = '<h3> Networth: ' + netWorth + '</h3>';
-            $('.net-worth-div').append(netWorthString);
+        var Position = Parse.Object.extend("Position");
+        var query = new Parse.Query(Position);
+        query.equalTo("userId", userId);
+        query.find({
+          success: function(holdings) {
+            console.warn(holdings);
+            var portfolioString = "<ul>";
+            var len = holdings.length
+              for (var i=0; i<len; ++i) {
+                if (i in holdings) {
+                  var holding = holdings[i];
+                  var shares = holding.get("numberShares");
+                  var currentPrice = holding.get("sharePrice");
+                  var songName = holding.get("songName");
+                  var totalCost = holding.get("totalCost");
+                  var songId = holding.get("songId");
+
+                  portfolioString += '<li>Song Name:' + songName + ' CurrentPrice: ' + currentPrice + '</li>';
+                 portfolioString += '<input type="hidden" value="'+songId+'"/>';
+                }
+              }
+              portfolioString += '</ul>';
+              console.log(portfolioString);
+            $('.portfolio').append(portfolioString);
           },
           error: function(object, error) {
             console.log(error);
           }
         });
+
         this.render();
       },
 
       render: function() {
         this.delegateEvents();
+      },
+      doSomething: function(){
+          var objId = $(this).find('input').val();
+          new SongTradingView( {song:objId} );
       }
 
     });
@@ -337,11 +355,11 @@ $(function() {
             console.log('Error Loading Song Details: '+ error);
           }
         });
-        this.render(songName);
+        this.render();
 
       },
 
-      render: function(songName) {
+      render: function() {
         var prices = [0,1,2,3,4,5,6,7,8,9,8,7,6,5,4];
 
         var chart1 = new Highcharts.StockChart({
@@ -349,7 +367,7 @@ $(function() {
             renderTo: 'container'
           },
           title:{
-            text: songName
+            text: "Test"
           },
           xAxis:{
             type: 'datetime'
@@ -363,7 +381,7 @@ $(function() {
             selected: 1
           },
           series: [{
-            name: songName,
+            name: 'Test',
             data: prices // predefined JavaScript array
           }]
         });
@@ -401,7 +419,7 @@ $(function() {
                   openPosition.set("numberShares", numShares);
                   openPosition.set("sharePrice", price);
                   openPosition.set("totalCost", totalCost);
-                  openPosition.set("user", user);
+                  openPosition.set("user", userId);
                   openPosition.set("songId", songId);
                   openPosition.save(null, {
                     success: function(again){
@@ -424,7 +442,7 @@ $(function() {
                         success:function(userInfo) {
                           console.log("Successfully Updated Net Worth");
                           songId="";
-                          location.reload();
+                          //location.reload();
                         }
                       });
                     },
@@ -461,7 +479,9 @@ $(function() {
                         userInfo.save(null, {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
-                            location.reload();
+                            //location.reload();
+                          this.remove();
+                          this.unbind();
                           }
                         });
                       },
@@ -527,7 +547,10 @@ $(function() {
                         userInfo.save(null, {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
-                            location.reload();
+                            //location.reload();
+
+                          this.remove();
+                          this.unbind();
                             delete self;
                           }
                         });
