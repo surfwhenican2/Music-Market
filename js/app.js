@@ -192,8 +192,8 @@ $(function() {
                   var totalCost = holding.get("totalCost");
                   var songId = holding.get("songId");
 
-                  portfolioString += '<li>Song Name:' + songName + ' CurrentPrice: ' + currentPrice + '</li>';
-                 portfolioString += '<input type="hidden" value="'+songId+'"/>';
+                  portfolioString += '<li>Song Name:  <b>' + songName + '</b>     CurrentPrice:  <b>' + currentPrice + '</b>  Number of Shares: <b>' + shares + '</b>  Market Value:  <b>' + totalCost + '</b>  </li>';
+                  portfolioString += '<input type="hidden" value="'+songId+'"/>';
                 }
               }
               portfolioString += '</ul>';
@@ -404,7 +404,7 @@ $(function() {
 
         var Position = Parse.Object.extend("Position");
         var query = new Parse.Query(Position);
-        query.equalTo("user", user);
+        query.equalTo("userId", userId);
         query.equalTo("songId", songId);
         query.first({
           success: function(holding){
@@ -419,7 +419,7 @@ $(function() {
                   openPosition.set("numberShares", numShares);
                   openPosition.set("sharePrice", price);
                   openPosition.set("totalCost", totalCost);
-                  openPosition.set("user", userId);
+                  openPosition.set("userId", userId);
                   openPosition.set("songId", songId);
                   openPosition.save(null, {
                     success: function(again){
@@ -442,7 +442,7 @@ $(function() {
                         success:function(userInfo) {
                           console.log("Successfully Updated Net Worth");
                           songId="";
-                          //location.reload();
+                          location.reload();
                         }
                       });
                     },
@@ -480,8 +480,6 @@ $(function() {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
                             //location.reload();
-                          this.remove();
-                          this.unbind();
                           }
                         });
                       },
@@ -547,10 +545,7 @@ $(function() {
                         userInfo.save(null, {
                           success:function(userInfo) {
                             console.log("Successfully Updated Networth");
-                            //location.reload();
-
-                          this.remove();
-                          this.unbind();
+                            location.reload();
                             delete self;
                           }
                         });
