@@ -9,6 +9,12 @@ body {
     font-smoothing: antialiased;
 }
 
+#page-one .ui-icon { background:  url(../images/IPO.png)}
+#page-two .ui-icon { background: url(../images/all_songs.png)}
+#page-three .ui-icon { background:  url(../images/portfolio.png)}
+#page-four .ui-icon { background:  url(../images/top_investors.png)}
+#page-settings .ui-icon { background:  url(../images/settings.png) }
+
 #main {
     width: 500px;
     margin: auto;
