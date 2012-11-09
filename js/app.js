@@ -85,7 +85,8 @@ $(function() {
 
       showDetail: function() {
         var songName = ($('#song-name').text());
-        new SongTradingView({song:songName})
+        console.log("song name is :" + songName);
+        new SongTradingView({song:"0MHWLlAwsU"});
       }
     });
 
@@ -331,7 +332,7 @@ $(function() {
             renderTo: 'container'
           },
           title:{
-            text: "Test"
+
           },
           xAxis:{
             type: 'datetime'

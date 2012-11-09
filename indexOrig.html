@@ -5,13 +5,10 @@
   <title>CS147 App</title>
   <meta name="description" content="CS 147 App">
   <meta name="viewport" content="width=device-width">
-  
-  
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/styles.css" media="all" type="text/css" />
-  <link rel="stylesheet"  href="http://jquerymobile.com/demos/1.2.0/css/themes/default/jquery.mobile-1.2.0.css" />  
+    <link rel="stylesheet"  href="http://jquerymobile.com/demos/1.2.0/css/themes/default/jquery.mobile-1.2.0.css" />  
   <link rel="stylesheet" href="http://jquerymobile.com/demos/1.2.0/docs/_assets/css/jqm-docs.css"/>
-  <link rel="stylesheet" href="css/jquery.mobile-1.2.0.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="js/underscore-1.1.6.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.6.min.js"></script>
@@ -79,49 +76,27 @@
       </div>
       <div class="section">
         <div class="main">
-        
-	      <a href="#homepagepop" data-rel="popup"><h1 style="center">Music Market</h1></a>
-          <div class="title" data-role="popup" id="homepagepop">
-           Music Market lets you flex your hipster intuition and invest in the hottest new stocks on the market. You will start off with $2,500 in credits.
-           <p></p>
-           To start, click IPO or All Songs and purchase some shares!
-           <p></p>
-           If you know your market, you'll become a top investor in no time!
+          <div class="title">
+            <h1>Music Market</h1>
           </div>
-          
-        <h4> Welcome to music market! To get started, head to 'All Songs' and start building your Portfolio!
-        <p></p>
-        **Don't know how to invest? Click any heading for a short tutorial!**
-         </h4>
+        <h4> Welcome to music market! To get started, head to 'All Songs' and start building your Portfolio </h4>
         </div>
-        
-   
-      <div data-role="navbar" class="nav-glyphish-example" >
+      <div data-role="navbar">
         <ul>
-          <li><a href="#" id="page-one" data-icon="custom">IPO</a></li>
-          <li><a href="#" id="page-two" data-icon="custom">All Songs</a></li>
-          <li><a href="#" id="page-three" data-icon="custom">Portfolio</a></li>
-          <li><a href="#" id="page-four" data-icon="custom">Top Investors</a></li>
-          <li><a href="#" id="page-settings" data-icon="custom">Settings</a></li>
+          <li><a href="#" id="page-one">IPO</a></li>
+          <li><a href="#" id="page-two">All Songs</a></li>
+          <li><a href="#" id="page-three">My Portfolio</a></li>
+          <li><a href="#" id="page-four">Top Investors</a></li>
+          <li><a href="#" id="page-settings">Settings</a></li>
         </ul>
-      </div> 
-        
-      <!-- /navbar -->  
+      </div><!-- /navbar -->  
       </div>
   </script>
 
   <script type="text/template" id="ipo-view">
  
-        <a href="#IPOpop" data-rel="popup"><h1 style="center">IPO</h1></a>
-          <div data-role="popup" id="IPOpop">
-           IPO (Initial Public Offering) features a new song of the day and its listing price.
-           <p></p>
-           Here, you can sample new music... if you like what you hear, purchase some shares by clicking "Buy"!
-          </div>
-
       <div class="section">
         <div class="main">
-        
           <div id='song-name'>Gagnam Style</div>
         	<h4>PSY: Listed at $5.34</h4>
         
@@ -141,7 +116,6 @@
 	        
 	        <script type="text/javascript">
             $('#page-five').button();
-            $('#IPOpop').popup();
             
             var playMusica = function() {
               document.getElementById('gangnam').play();//('#gangnam').play();
@@ -156,21 +130,13 @@
   </script>
 
   <script type="text/template" id="page-two-view">
-  
-         <a href="#songspop" data-rel="popup"><h1 style="center">All Songs</h1></a>
-          <div data-role="popup" id="songspop">
-           List of all songs (and prices) previously listed on the IPO page.
-           <p></p>
-           To buy a song, click its name!
-          </div>
-  
 	  <link rel="stylesheet" href="http://jquerymobile.com/demos/1.2.0/docs/_assets/css/jqm-docs.css"/>
+
 
           <div class="list">
           </div>
         <script type="text/javascript">
           $(".btn-bro").button();	
-          $('#songspop').popup();
         </script>
         <script type="text/javascript">
       	  $(".btn-bro").button();
@@ -182,70 +148,26 @@
   </script>
 
   <script type="text/template" id="portfolio-view">
-  
-	  <a href="#portfoliopop" data-rel="popup"><h1 style="center">My Portfolio</h1></a>
-          <div data-role="popup" id="portfoliopop">
-           Your portfolio contains songs that you've purchased from the 'All Songs' or 'IPO' pages, in addition to your net worth.
-           <p></p>
-            Net worth is your beginning balance plus or minus the gains or losses your songs have made over time. Users with the highest net worths are listed as Top Investors!
-           <p></p>
-           If you don't see anything now, go buy some songs :)
-          </div>
-  
       <div class="section"> 
         <div class="portfolio">
         </div>
+        <div class="net-worth-div">
+        </div>
       </div>
-      
-         <script type="text/javascript">	
-          $('#portfoliopop').popup();
-        </script>
-      
   </script>
-  
 
   <script type="text/template" id="page-four-view">
-  
-	  <a href="#investorspop" data-rel="popup"><h1 style="center">Top Investors</h1></a>
-          <div data-role="popup" id="investorspop">
-           List of top Music Market investors, by net worth. These fans are the cream of the crop - they buy before a song blows up in popularity, and sell before it tanks.
-           <p></p>
-           Top Investors can win cool prizes like concert tickets and meet-and-greets with their favorite artists!
-          </div>
-  
       <div class="section">
         <div class="main2">
         </div>
       </div>
-      
-      <script type="text/javascript">	
-          $('#investorspop').popup();
-      </script>
-      
   </script>
   
   <script type="text/template" id="song-trading-view">
-  	  
-  	  	  <a href="#tradingpop" data-rel="popup"><h1 style="center">Trading</h1></a>
-          <div data-role="popup" id="tradingpop">
-           Here's where the action happens!
-           <p></p> 
-           Like what you hear when you click play? Buy new shares!
-           <p></p>
-           Think this song is lame? Sell shares that you already own. 
-           <p></p>
-           A graph shows the price of the song over time, influenced by the number of buyers or sellers. 
-          </div>
-  	  
   	  <div class="section">
+        <h2>Trading</h2>
+
         <div class="main">	
-       		<div data-role="popup" id="sharesbought">
-       			Congrats! Check your portfolio to see your new holdings!
-       		</div>
-       		
-       		<div data-role="popup" id="sharessold">
-       			Congrats! Check your portfolio to see you new holdings!
-       		</div>
 
          	<h3 id="song-title"></h3>
           <h4 id="artist-name">by </h4>
@@ -305,15 +227,10 @@
               document.getElementById('gangnam').pause();
             }
       	$(".btn-bro").button();
-      	$("#sharesbought").popup();
-      	$("#sharessold").popup();
-      	$('#tradingpop').popup();
       </script>
   </script>
   
   <script type="text/template" id="page-settings-view">
-  
-  <h1 style="center"> Settings </h1>
   	  <div class="section">
   	  <a href="#" data-role="button" id="change-password" data-icon="arrow-r" class="btn">Change Password</a>
         
@@ -363,7 +280,7 @@
     </li>
   </script>
 
-    <script type="text/template" id="change-password-template">
+  <script type="text/template" id="change-password-template">
     <div class="title">
         <h1>Music Market</h1>
     </div>
