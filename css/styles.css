@@ -38,6 +38,9 @@ body {
 #topbutton{
 	float: right();
 }
+#homebutton{
+	float: right();
+}
 
 .ui-mini .ui-btn-inner {
 	font-size: 10px !important;
