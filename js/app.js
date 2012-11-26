@@ -136,7 +136,6 @@ $(function() {
           }
         }); 
 
-        this.addAll();
         this.render();
       },
       render: function() {
