@@ -96,7 +96,7 @@
 
         <h4> Welcome to music market! To get started, head to 'All Songs' and start building your Portfolio!
         <p></p>
-        **Don't know how to invest? Click the Settings page to find out more!**
+        **Don't know how to invest? Click any heading for a short tutorial!**
          </h4>
         </div>
         
@@ -131,6 +131,7 @@
         <div class="main">
         
           <div id='song-name'>Gangnam Style</div>
+          <input type="hidden" name="0MHWLlAwsU" id="song-id"/>
         	<h4>Listed at $10</h4>
         
           <audio id="gangnam" preload="preload">
@@ -214,6 +215,8 @@
       <div class="section"> 
         <div class="portfolio">
         </div>
+        <div class="net-worth-div">
+        </div>
       </div>
       
          <script type="text/javascript">
@@ -253,7 +256,7 @@
   	  
   	  	<a href="#tradingpopup" data-role="button" data-icon="info" data-iconpos="notext" data-rel="popup" id="tradingbutton">Top</a>
       <div data-role="popup" id="tradingpopup">
-           Here's where the action happens!
+           Heres where the action happens!
            <p></p> 
            Like what you hear when you click play? Buy new shares!
            <p></p>
@@ -297,6 +300,7 @@
         	   			
         	   			<td>
         		   			Current Price:<p id="share-price"></p>
+                    Funds Available:<p id="funds"></p>
         	   			</td>
         	   		</tr>
         	   		<tr>
@@ -406,3 +410,4 @@
 </body>
 
 </html>
+
