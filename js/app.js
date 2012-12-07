@@ -111,16 +111,22 @@ $(function() {
              var liststr = '<ul data-role="listview" id="song-list" data-filter="true" data-theme="g" >';
             collection.each(function(object) {
               var title = object.get("SongName");
+              var artist = object.get("ArtistName");
               var price = object.get("CurrentPrice");
+              var songImage = object.get("albumUrl"); 
               var objectId = object.id;
-               liststr += '<li>' + title;
-               liststr += '<input type="hidden" value="'+objectId+'"/><span>       $';
-               liststr += price;
-               liststr += '</span></li>';
+              var randomNum = -5 + (5+5)*Math.random();
+              randomNum = Math.round(100*randomNum)/100;
+              var color = 'red';
+              if (randomNum > 0) color = 'green';
+               liststr += '<li style="height=110"><div><div id="song" style="display: inline-block;"><img src="'+songImage+'" height="100" width="100"></div><div style="display: inline-block;padding-left:60px;"><strong>' + title;
+               liststr += '</strong><input type="hidden" value="'+objectId+'"/> by '+artist+'<br>Price:  $';
+               liststr += price+'<br>Todays Change: <font color="'+color+'" >'+randomNum+'</font></div></div></li>';
             });
             liststr += "</ul>";
             console.log(liststr);
-            $('.list').append(liststr);
+            $('.list').html(liststr);
+            $(".list").listview("refresh");
             $('#song-list li').click(function(){
                 var objId = $(this).find('input').val();
                 new SongTradingView({songId:objId});
@@ -177,17 +183,21 @@ $(function() {
                   var holding = holdings[i];
                   var shares = holding.get("numberShares");
                   var currentPrice = holding.get("sharePrice");
+                  currentPrice = Math.round(100*currentPrice)/100;
+
                   var songName = holding.get("songName");
                   var totalCost = holding.get("totalCost");
+                  var color = 'red';
+                  if (totalCost > 0) color = 'green';
                   var songId = holding.get("songId");
 
-                  portfolioString += '<li>Song Name:  <b>' + songName + '</b>     CurrentPrice:  <b>' + currentPrice + '</b>  Number of Shares: <b>' + shares + '</b>  Market Value:  <b>' + totalCost + '</b>';
-                  portfolioString += '<input type="hidden" value="'+songId+'"/></input></li>';
+                  portfolioString += '<li><div style="display: inline-block;"> <b>'+songName+'</b><br> CurrentPrice:  <b>' + currentPrice + '</b></div><div style="display: inline-block;padding-left:80px;"> Number of Shares: <b>' + shares + '</b><br>Market Value:  <b><font color="'+color+'">'+ totalCost + '</font></b>';
+                  portfolioString += '<input type="hidden" value="'+songId+'"/></input></div></li>';
                 }
               }
               portfolioString += '</ul>';
               console.log(portfolioString);
-            $('.portfolio').append(portfolioString);
+            $('.portfolio').html(portfolioString);
             $('.portfolio li').click(function(){
                 var objId = $(this).find('input').val();
                 new SongTradingView({songId:objId});
@@ -251,7 +261,7 @@ $(function() {
                 var userImage = object.get("userImage");
                 console.log(userImage.url);
                
-                topInvestorString += '<tr><img src="'+userImage.url+'" alt="Sean OBrien" height="160" width="220"/>';
+                topInvestorString += '<tr><img src="'+userImage.url+'" height="160" width="220"/>';
                 topInvestorString += '<p>User: ' + username + '</p><p>Net Worth: ' + worth + '</p></tr>';
               }
               topInvestorString += '</table>';
@@ -369,6 +379,7 @@ $(function() {
         var songId = this.options.songId;
         var price = $('#share-price').html();
         var songName = $('#song-title').html();
+        var artistName = $('#artist-name').html();
         price = parseFloat(price);
         var numShares = document.getElementById('input-buy').value;
         numShares = parseInt(numShares);
@@ -408,7 +419,8 @@ $(function() {
                         openPosition.set("totalCost", totalCost);
                         openPosition.set("userId", userId);
                         openPosition.set("songId", songId);
-                        openPosition.set("realizedProfit", -totalCost);
+                        openPosition.set("realizedProfit", totalCost);
+                        openPosition.set("artistName", artistName);
                         openPosition.save(null, {
                           success: function(again){
                             console.log("Save Successful");
@@ -428,11 +440,26 @@ $(function() {
                                   userInfo.save(null, {
                                     success:function(userInfo) {
                                       console.log("Successfully Updated Net Worth");
-                                      songId="";
-                                      this.detatch();
-                                      this.unbind();
-                                      delete self;                             
-                                      location.reload();
+                                      var Songs = Parse.Object.extend("Songs");
+                                      var query = new Parse.Query(Songs);
+                                      query.equalTo("objectId", songId);
+                                      query.first({
+                                        success: function(song) {
+                                          var newSongPrice = parseFloat(price + (.10*numShares));
+                                          song.set("CurrentPrice", newSongPrice);
+                                          song.save(null,{
+                                            success: function(song){
+                                              console.log("Songs price updated..");
+                                              songId="";
+                                              delete self;                             
+                                              location.reload();
+                                            }
+                                          });
+                                        },
+                                        error: function(error){
+                                          alert(error);
+                                        }
+                                      });
                                     }
                                   });
                                 },
@@ -482,10 +509,26 @@ $(function() {
                                   userInfo.save(null, {
                                     success:function(userInfo) {
                                       console.log("Successfully Updated Net Worth");
-                                      songId="";
-                                  
-                                      delete self;                             
-                                      location.reload();
+                                      var Songs = Parse.Object.extend("Songs");
+                                      var query = new Parse.Query(Songs);
+                                      query.equalTo("objectId", songId);
+                                      query.first({
+                                        success: function(song) {
+                                          var newSongPrice = parseFloat(price + (.10*numShares));
+                                          song.set("CurrentPrice", newSongPrice);
+                                          song.save(null,{
+                                            success: function(song){
+                                              console.log("Songs price updated..");
+                                              songId="";
+                                              delete self;                             
+                                              location.reload();
+                                            }
+                                          });
+                                        },
+                                        error: function(error){
+                                          alert(error);
+                                        }
+                                      });
                                     }
                                   });
                                 },
@@ -598,7 +641,8 @@ $(function() {
   var PageSettingsView = Parse.View.extend({
       
     events: {
-        "click #change-password":"changePass"
+        "click #change-password":"changePass",
+        "click #upload_prof_pic":"upload"
     },
 
     el: ".main",
@@ -606,7 +650,7 @@ $(function() {
     initialize: function() {
       var self = this;
         
-      _.bindAll(this, 'render', 'changePass');
+      _.bindAll(this, 'render', 'changePass', 'upload');
       this.$el.html(_.template($("#page-settings-view").html()));
       this.render();
     },
@@ -618,6 +662,9 @@ $(function() {
     changePass: function(){
       console.log("Change Password Called");
       new ChangePasswordView();
+    },
+    upload: function(){
+      
     }
   });
 
@@ -650,6 +697,7 @@ $(function() {
             success: function(portfolio){
             }
           });
+          alert("You hipster you :P.  You're net worth is 1000 credits!  Start buying and selling songs to make the leader board");
           new ManageAppView();
           location.reload();
           self.undelegateEvents();
@@ -736,6 +784,7 @@ $(function() {
       var password = this.$("#login-password").val();
       Parse.User.logIn(username, password, {
         success: function(user) {
+          alert("You hipster you :P.  You're net worth is 1000 credits!  Start buying and selling songs to make the leader board");
           new ManageAppView();
           location.reload();
           self.undelegateEvents();
@@ -848,27 +897,21 @@ $(function() {
   var AppRouter = Parse.Router.extend({
         routes: {
             "*actions": "defaultRoute",
-            "portfolio": "portfolio"
+            "portfolio": "portfolio",
+            "allSongs":"allSongs"
         },
 
         portfolio: function(){
           new PortfolioView();
+        },
+        allSongs: function(){
+          new AllSongsView();
         }
   });
 
   new AppView;
 
-  var app_router = new AppRouter;
-
-  app_router.on('route:defaultRoute', function(actions){
-    alert(actions);
-  })
+  var app_router = new AppRouter();
 
 	Parse.history.start();
 });
-
-
-
-
-
-
