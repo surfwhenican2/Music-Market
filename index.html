@@ -1,8 +1,6 @@
 <!doctype html>
 <head>
-  <script src="//cdn.optimizely.com/js/141578538.js"></script>
   <meta charset="utf-8">
-
   <title>CS147 App</title>
   <meta name="description" content="CS 147 App">
   <meta name="viewport" content="width=device-width">
@@ -10,9 +8,11 @@
   <link rel="stylesheet" href="css/reset.css">
 
   <link rel="stylesheet" href="css/styles.css" media="all" type="text/css" />
-  <link rel="stylesheet"  href="http://jquerymobile.com/demos/1.2.0/css/themes/default/jquery.mobile-1.2.0.css" />  
-  <link rel="stylesheet" href="http://jquerymobile.com/demos/1.2.0/docs/_assets/css/jqm-docs.css"/>
+
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="js/jqm-config.js"></script>
+    <link rel="stylesheet"  href="http://jquerymobile.com/demos/1.2.0/css/themes/default/jquery.mobile-1.2.0.css" />  
+  <link rel="stylesheet" href="http://jquerymobile.com/demos/1.2.0/docs/_assets/css/jqm-docs.css"/>
   <script src="js/underscore-1.1.6.js"></script>
   <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.1.6.min.js"></script>
   <script src="js/app.js"></script>
@@ -125,15 +125,17 @@
            IPO (Initial Public Offering) features a new song of the day and its listing price.
            <p></p>
            Here, you can sample new music... if you like what you hear, purchase some shares by clicking "Buy"!
-          </div>
+      </div>
 
       <div class="section">
         <div class="main">
         
-          <div id='song-name'>Gangnam Style</div>
+        <div style="display: inline-block;">
+          <div id='song-name'>Gangnam Style by PSY</div>
           <input type="hidden" name="0MHWLlAwsU" id="song-id"/>
         	<h4>Listed at $10</h4>
-        
+          <h5>Todays Change: <font color="green"> 2.57 </font></h5>
+
           <audio id="gangnam" preload="preload">
             <source src="audio/Gangnam_Style.mp3" type="audio/mp3" />
           </audio>
@@ -148,16 +150,23 @@
           
           <p></p>
           
-         
+         </div>
+
+         <div style="display: inline-block;">
+         <center>
+          <img src="http://upload.wikimedia.org/wikipedia/en/a/ad/Gangnam_Style_Official_Cover.png" width="300px">
+          </center>
+         </div>
    
-   <a href="#" data-role="button" data-icon="plus" id="stock-detail-page">Buy</a>
+          <a href="#" data-role="button" data-icon="plus" id="stock-detail-page">Buy</a>
+
+          <p>"Gangnam Style" (Korean: 강남스타일, IPA: [kaŋnam sɯtʰail]) is a K-pop single by South Korean musician PSY. The song was released on July 15, 2012, as the lead single of his sixth studio album PSY 6 (Six Rules), Part 1. "Gangnam Style" debuted at number one on the Gaon Chart, the national record chart of South Korea. As of December 6, 2012, the music video has been viewed over 897 million times on YouTube,[5] and is the sites most watched video after surpassing Justin Biebers single "Baby."</p>
       
 	        <script type="text/javascript">
             $('#page-five').button();
             $('#stock-detail-page').button();
             $('#ipobutton').button();
             $('#ipopopup').popup();
-            
             
             var playMusica = function() {
               document.getElementById('gangnam').play();//('#gangnam').play();
@@ -305,15 +314,13 @@
         	   		</tr>
         	   		<tr>
         	   			<td style="text-align: right;">BUY</td>
-        	   			<td><input id="input-buy" type="number" placeholder="10" style="text-align: right;" /></td>
-        	   			<td>
+        	   			<td><input id="input-buy" type="number" placeholder="10" style="text-align: right;" />
         		   			<a href="#sharesbought" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="buyButton">Go</a>
         	   			</td>
         	   		</tr>
         	   		<tr>
         	   			<td style="text-align: right;">SELL</td>
-        	   			<td><input id="input-sell" type="number" placeholder="10" style="text-align: right;" /></td>
-        	   			<td>
+        	   			<td><input id="input-sell" type="number" placeholder="10" style="text-align: right;" />
         		   			<a href="#sharessold" data-rel="popup" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r" class="btn-bro" id="sellButton">Go</a>
         	   			</td>
         	   		</tr>
@@ -349,22 +356,44 @@
   	  <div class="section">
   	  <a href="#" data-role="button" id="change-password" data-icon="arrow-r" class="btn">Change Password</a>
         
+      <a href="#" data-role="button" id="upload_prof_pic" data-icon="arrow-r" class="btn">Change Profile Picture</a>
         
-        <div data-role="popup" id="upload_prof_pic">
-          
-          
-          <form action="post" enctype="multipart/form-data" style="padding:10px;">
-            <p>
-              Select a photo to upload!
-            </p>
-            <input type="file" />
-            <input type="submit" value="Upload Photo" class="btn-bro" />
-          </form>
-        </div>
+      <form method="post" action="upload.php" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type="submit" name="submit" value="submit" />
+      </form>
         
       </div>
   	  
   	   <script type="text/javascript">
+
+          var control = document.getElementById("your-files");
+          control.addEventListener("change", function(event) {
+
+              var i = 0,
+                  files = control.files,
+                  len = files.length;
+
+              for (; i < len; i++) {
+                  console.log("Filename: " + files[i].name);
+                  console.log("Type: " + files[i].type);
+                  console.log("Size: " + files[i].size + " bytes");
+              }
+              var user = Parse.User.current();
+              var Portfolio = Parse.Object.extend("Portfolio");
+                var query = new Parse.Query(Portfolio);
+                query.equalTo("user", user);
+                query.first({
+                  success: function(portfolio) {
+                    portfolio.set("userImage", $('your-files[type=file]').val());
+                    portfolio.save();
+                    alert("Saved");
+                      }
+                });
+
+
+          }, false);
+        
         $(".btn-bro").button();
         $(".btn").button();
         $("#upload_prof_pic").popup({ overlayTheme: "b" });
@@ -406,8 +435,5 @@
           <button>Set new Password</button>
         </form>
   </script>
-
 </body>
-
 </html>
-
